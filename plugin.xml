@@ -1,0 +1,13 @@
+<plugin name='javafx' version='0.1' griffonVersion='0.9.3-beta-1 &gt; *' jdk='1.5'>
+  <author>Dean Iverson</author>
+  <authorEmail>deanriverson@gmail.com</authorEmail>
+  <title>Griffon JavaFX Plugin</title>
+  <description>This plugin allows you to write JavaFX applications using the Griffon framework.</description>
+  <documentation>http://griffon.codehaus.org/Javafx+Plugin</documentation>
+  <license>&lt;UNKNOWN&gt;</license>
+  <toolkits>javafx</toolkits>
+  <resources>
+    <resource>BuildConfig</resource>
+  </resources>
+  <dependencies />
+</plugin>
