@@ -18,11 +18,11 @@ griffon.project.dependency.resolution = {
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
     }
-    dependencies {
-        compile('groovyx.javafx:groovyfx:0.1') {
-            exported = false
-        }
-    }
+//    dependencies {
+//        compile('groovyx.javafx:groovyfx:0.1') {
+//            exported = false
+//        }
+//    }
 }
 
 griffon {

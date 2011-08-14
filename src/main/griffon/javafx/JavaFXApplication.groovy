@@ -21,14 +21,12 @@ import griffon.core.GriffonModel
 import griffon.core.GriffonView
 import griffon.core.MVCClosure
 import griffon.util.GriffonExceptionHandler
-import griffon.util.UIThreadHelper
 import javafx.application.Application
-import javafx.stage.Stage
-import org.codehaus.griffon.runtime.core.BaseGriffonApplication
-import javafx.event.EventType
-import javafx.stage.WindowEvent
 import javafx.event.EventHandler
-import javafx.application.Platform
+import javafx.stage.Stage
+import javafx.stage.WindowEvent
+import org.codehaus.griffon.runtime.core.BaseGriffonApplication
+import griffon.core.UIThreadManager
 
 /**
  * @author dean
@@ -50,7 +48,7 @@ class JavaFXApplication extends Application {
 
     @Override
     void init() {
-        UIThreadHelper.instance.setUIThreadHandler(new JavaFXUIThreadHandler())
+        UIThreadManager.instance.setUIThreadHandler(new JavaFXUIThreadHandler())
         GriffonExceptionHandler.registerExceptionHandler()
         initialize()
     }
@@ -66,6 +64,7 @@ class JavaFXApplication extends Application {
         // head with System.exit().
         primaryStage.setOnHidden(new EventHandler<WindowEvent>() {
             void handle(WindowEvent t) {
+                shutdown()
                 System.exit(0)
             }
         });

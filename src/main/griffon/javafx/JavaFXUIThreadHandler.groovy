@@ -3,6 +3,9 @@ package griffon.javafx
 import griffon.util.UIThreadHandler
 import javafx.application.Platform
 import java.lang.reflect.InvocationTargetException
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.Executors
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,6 +14,8 @@ import java.lang.reflect.InvocationTargetException
  * Time: 5:29 PM
  */
 class JavaFXUIThreadHandler implements UIThreadHandler {
+    private ExecutorService threadPool = Executors.newFixedThreadPool(10)
+
     /**
      * True if the current thread is the UI thread.
      */
@@ -32,14 +37,11 @@ class JavaFXUIThreadHandler implements UIThreadHandler {
         if(isUIThread()) {
             runnable.run();
         } else {
-            try {
-                // Fake it: run the task using runLater but block
-                // this method until it finishes.  GPars?
-            } catch(InterruptedException ie) {
-                // ignore
-            } catch(InvocationTargetException ite) {
-                // ignore
-            }
+            // Define a Runnable that executes the task on the JavaFX thread
+            // then wait for it to complete
+            def runOnJavaFXThread = { executeAsync(runnable) } as Runnable
+            def future = threadPool.submit(runOnJavaFXThread)
+            future.get()
         }
     }
 
@@ -50,8 +52,7 @@ class JavaFXUIThreadHandler implements UIThreadHandler {
         if(!isUIThread()) {
             runnable.run();
         } else {
-            // TODO use a ThreadPool - again GPars?
-            new Thread(runnable).start();
+            threadPool.submit(runnable)
         }
     }
 }
