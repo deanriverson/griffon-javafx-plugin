@@ -1,4 +1,4 @@
 @artifact.package@
 region {
-    text(content: '@artifact.name.plain@ Group')
+    text(text: '@artifact.name.plain@ Group')
 }

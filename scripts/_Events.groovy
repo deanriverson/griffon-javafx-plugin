@@ -24,32 +24,18 @@ import java.awt.PageAttributes.OriginType
  * Add the JavaFX runtime jar to the compile and runtime classpaths.
  */
 def addJavaFXRuntimeJarToClasspath = {
-//    def javafxHome = buildConfig.griffon.javafx?.home
-//    println "javafxHome is $javafxHome"
-//    println "runtime exists? ${new File(javafxHome+'/rt/lib/jfxrt.jar').exists()}"
-//    griffonSettings.dependencyManager.flatDirResolver name: 'javafx-runtime', dirs: "$javafxHome/rt/lib"
-//    griffonSettings.dependencyManager.addApplicationDependency(conf: 'compile', group: 'com.oracle',
-//            name: 'jfxrt', version: '')
-
     def originalCompileClasspath = compileClasspath
 
     compileClasspath = {
         if (originalCompileClasspath)
             originalCompileClasspath()
 
-//        def javafxrt = new File(buildConfig.griffon.javafx?.runtime?.path)
-        def javafxrt = new File("${buildConfig.griffon.javafx?.home}/rt/lib/jfxrt.jar")
+        def javafxrt = new File("${System.getenv('JAVAFX_HOME')}/rt/lib/jfxrt.jar")
         if (javafxrt) {
             debug "  ${javafxrt.absolutePath}"
             pathelement(location: javafxrt.absolutePath)
         }
     }
-
-//    def javafxrt = new File(buildConfig.griffon.javafx?.runtime?.path)
-//    if (javafxrt) {
-//        griffonSettings.compileDependencies.add(javafxrt)
-//        println "ADDED jfxrt.jar to compile deps: ${griffonSettings.compileDependencies}"
-//    }
 }
 
 def originalEventSetClasspath = binding.variables.containsKey('eventSetClasspath') ? eventSetClasspath : {cl ->}
@@ -87,7 +73,7 @@ eventRunAppTweak = { message ->
         if (originalSetupRuntimeJars)
             runtimeJars = originalSetupRuntimeJars()
 
-        def javafxrt = new File("${buildConfig.griffon.javafx?.home}/rt/lib/jfxrt.jar")
+        def javafxrt = new File("${System.getenv('JAVAFX_HOME')}/rt/lib/jfxrt.jar")
         if (javafxrt)
             runtimeJars << javafxrt
 
