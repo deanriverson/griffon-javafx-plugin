@@ -35,26 +35,28 @@ def eventClosure1 = binding.variables.containsKey('eventSetClasspath') ? eventSe
 eventSetClasspath = { cl ->
     eventClosure1(cl)
 
-    if (compilingPlugin('javafx'))
-        return
-
-    griffonSettings.dependencyManager.flatDirResolver name: 'griffon-javafx-plugin', dirs: "${javafxPluginDir}/addon"
-
     // Don't add the dependencies during uninstall since that will cause errors
-    // when the temporary javafx-rt.jar file is not actually found.
+    // when the temporary javafx-rt-2.0.jar file is not actually found.
     if (scriptName != 'UninstallPlugin') {
         // Temporary copy of the jfxrt.jar file for compiling purposes.  Without this the
         // compiler can't find the JavaFX ObjectProperty classes used by @FXBindable.
         ant.copy(file: "${System.getenv('JAVAFX_HOME')}/rt/lib/jfxrt.jar",
-                 tofile: "${javafxPluginDir}/addon/javafxrt-${javafxPluginVersion}.jar")
+                 tofile: "${javafxPluginDir}/addon/javafxrt-2.0.jar")
 
+        griffonSettings.dependencyManager.flatDirResolver name: 'griffon-javafx-plugin', dirs: "${javafxPluginDir}/addon"
         griffonSettings.dependencyManager.addPluginDependency('javafx', [
             conf: 'compile',
             group: 'org.codehaus.griffon.plugins',
             name: 'javafxrt',
-            version: javafxPluginVersion
+            version: '2.0'
         ])
+    }
 
+    if (compilingPlugin('javafx'))
+        return
+
+    // Again, don't add the dependencies during uninstall.
+    if (scriptName != 'UninstallPlugin') {
         griffonSettings.dependencyManager.addPluginDependency('javafx', [
             conf: 'compile',
             group: 'org.codehaus.griffon.plugins',
@@ -69,7 +71,7 @@ eventSetClasspath = { cl ->
  * at run time.
  */
 eventCopyLibsEnd = { jardir ->
-    def javafxJar = new File("staging/javafxrt-${javafxPluginVersion}.jar")
+    def javafxJar = new File("staging/javafxrt-2.0.jar")
     ant.delete(file: javafxJar, failonerror: false, quiet: true)
 }
 
