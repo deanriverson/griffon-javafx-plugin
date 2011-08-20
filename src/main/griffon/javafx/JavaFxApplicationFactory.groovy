@@ -20,6 +20,7 @@ import javafx.stage.Stage
 import javafx.scene.Scene
 import javafx.scene.Group
 import groovyx.javafx.factory.SceneWrapper
+import javafx.scene.paint.Color
 
 /**
  * @author Dean Iverson
@@ -27,16 +28,19 @@ import groovyx.javafx.factory.SceneWrapper
 class JavaFxApplicationFactory extends AbstractFactory {
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        return builder.app.stage;
+        println "app from builder is ${builder.app}, stage is ${builder.app.primaryStage}"
+        return builder.app.primaryStage;
     }
 
     @Override
     boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
         def stage = node as Stage
+        stage.width = 800
+        stage.height = 600
+        
         attributes.each { key, value ->
             if (key == "title")
                 stage.title = value
-
         }
 
         if (!stage.title && builder.app.config?.application?.title)
@@ -47,16 +51,20 @@ class JavaFxApplicationFactory extends AbstractFactory {
 
     @Override
     void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
-        def stage = node as Stage
-        if (builder.variables.containsKey("sceneWrapper"))
-            stage.scene = builder.sceneWrapper.createScene()
+        final stage = node as Stage
+        Scene scene = builder.sceneWrapper?.build() ?: new Scene(new Group(), 800, 600)
+        stage.scene = scene
+        println "sceneWrapper is $builder.sceneWrapper"
+        println "stage is $stage, scene is $scene"
+        println "stage.scene is ${stage.scene}"
         stage.visible = true
     }
 
     @Override
     void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
         if (child instanceof SceneWrapper) {
-            builder.sceneWrapper = child as SceneWrapper
+            println "Application got child SceneWrapper"
+            builder.sceneWrapper = child
         }
     }
 }

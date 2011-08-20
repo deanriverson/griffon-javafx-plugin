@@ -1,12 +1,12 @@
 @artifact.package@
 
-import groovy.beans.Bindable
+import groovyx.javafx.beans.FXBindable
 import griffon.util.GriffonNameUtils
 
 class @artifact.name@ {
-    @Bindable String status
+    @FXBindable String message
 
     void mvcGroupInit(Map args) {
-        status = "Welcome to ${GriffonNameUtils.capitalize(app.config.application.title)}, a JavaFX application"
+        message = '@artifact.name.plain@ Group'
     }
 }

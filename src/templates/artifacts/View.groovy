@@ -1,4 +1,4 @@
 @artifact.package@
-region {
-    text(text: '@artifact.name.plain@ Group')
+stackPane {
+    text(text: bind(model.messageProperty))
 }

@@ -45,9 +45,12 @@ class JavafxGriffonAddon {
     //]
 
     // adds application event handlers
-    //def events = [
-    //    "StartupStart": {app -> /* event hadler code */ }
-    //]
+    def events = [
+        InitializeMVCGroup: { mvcType, mvcName, instanceMap ->
+            // Give GroovyFX's SceneGraphBuilder a reference to the primary Stage
+            instanceMap.builder.primaryStage = instanceMap.view.app.primaryStage
+        }
+    ]
 
     // handle synthetic node properties or
     // intercept existing ones
