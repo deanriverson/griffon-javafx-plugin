@@ -26,6 +26,10 @@ import groovy.transform.PackageScope
 class GriffonJavaFXApplication extends AbstractGriffonApplication {
     @PackageScope Stage primaryStage
 
+    GriffonJavaFXApplication(String[] args) {
+        super(args)
+    }
+    
     /**
      * Provide access to the primary stage.
      * @return The primary Stage of this application.
