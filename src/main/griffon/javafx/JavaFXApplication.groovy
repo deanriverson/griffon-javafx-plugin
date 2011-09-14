@@ -39,7 +39,6 @@ class JavaFXApplication extends Application {
         GriffonExceptionHandler.registerExceptionHandler()
 
         String[] args = getParameters().getRaw().toArray(new String[0]);
-        println "Initializing JavaFX app!!!  Args are ${args}"
         app = new GriffonJavaFXApplication(args)
         app.initialize()
     }
@@ -71,7 +70,6 @@ class JavaFXApplication extends Application {
     }
 
     public static void main(String[] args) {
-        println "In static void main, args are ${args}"
         Application.launch(JavaFXApplication, args)
     }
 }
