@@ -15,16 +15,8 @@
  */
 
 // check to see if we already have a JavafxGriffonAddon
-boolean addonIsSet1
-builderConfig.each() { prefix, v ->
-    v.each { builder, views ->
-        addonIsSet1 = addonIsSet1 || 'JavafxGriffonAddon' == builder
-    }
-}
-
-if (!addonIsSet1) {
-    println 'Adding JavaFXGriffonAddon to Builder.groovy'
-    builderConfigFile.append('''
-root.'JavafxGriffonAddon'.addon=true
-''')
+configText = '''root.'JavafxGriffonAddon'.addon=true'''
+if(!(builderConfigFile.text.contains(configText))) {
+    println 'Adding JavafxGriffonAddon to Builder.groovy'
+    builderConfigFile.text += '\n' + configText + '\n'
 }

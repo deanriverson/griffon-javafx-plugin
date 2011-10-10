@@ -62,9 +62,9 @@ class JavafxGriffonAddon {
 
     // adds application event handlers
     def events = [
-        InitializeMVCGroup: { mvcType, mvcName, instanceMap ->
+        InitializeMVCGroup: { mvcConfig, mvcGroup ->
             // Give GroovyFX's SceneGraphBuilder a reference to the primary Stage
-            instanceMap.builder.primaryStage = instanceMap.view.app.primaryStage
+            mvcGroup.builder.primaryStage = mvcGroup.view.app.primaryStage
         }
     ]
 
