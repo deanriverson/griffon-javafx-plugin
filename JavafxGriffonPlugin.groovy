@@ -18,7 +18,7 @@
  * @author Dean Iverson
  */
 class JavafxGriffonPlugin {
-    def version = "0.2.1"
+    def version = "0.3"
     def griffonVersion = '0.9.4 > *'
     def dependsOn = ['groovyfx':'0.2.1']
     def pluginIncludes = []
