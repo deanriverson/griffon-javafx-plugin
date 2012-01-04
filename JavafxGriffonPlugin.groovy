@@ -18,9 +18,9 @@
  * @author Dean Iverson
  */
 class JavafxGriffonPlugin {
-    def version = "0.2"
-    def griffonVersion = '0.9.3 > *'
-    def dependsOn = ['groovyfx':'0.2']
+    def version = "0.2.1"
+    def griffonVersion = '0.9.4 > *'
+    def dependsOn = ['groovyfx':'0.2.1']
     def pluginIncludes = []
     def license = 'Apache Public License 2.0'
     def toolkits = ['javafx']
