@@ -65,7 +65,7 @@ class JavaFXApplication extends Application {
 
     @Override
     void stop() {
-        println "App shutting down"
+        if(log.debugEnabled) log.debug "App shutting down"
         app.shutdown()
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,23 @@
  * @author Dean Iverson
  */
 class JavafxGriffonPlugin {
-    def version = "0.3"
-    def griffonVersion = '0.9.4 > *'
-    def dependsOn = ['groovyfx':'0.2']
-    def pluginIncludes = []
-    def license = 'Apache Public License 2.0'
-    def toolkits = ['javafx']
-    def platforms = []
-
-    // TODO Fill in these fields
-    def author = 'Dean Iverson'
-    def authorEmail = 'deanriverson@gmail.com'
-    def title = 'Griffon JavaFX Plugin'
-    def description = '''
+    String version = '0.4'
+    String griffonVersion = '0.9.5-SNAPSHOT > *'
+    Map dependsOn = [groovyfx: '0.3']
+    List pluginIncludes = []
+    String license = 'Apache Software License 2.0'
+    List toolkits = ['javafx']
+    List platforms = []
+    List authors = [
+        [
+            name: 'Dean Iverson',
+            email: 'deanriverson@gmail.com'
+        ]
+    ]
+    String title = 'Griffon JavaFX Plugin'
+    String description = '''
 This plugin allows you to write JavaFX applications using the Griffon framework.
 '''
+
     def documentation = 'http://griffon.codehaus.org/Javafx+Plugin'
 }

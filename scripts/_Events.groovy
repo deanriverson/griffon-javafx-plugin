@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,43 +27,18 @@ eventCreateConfigEnd = {
     buildConfig.griffon.application.mainClass = 'griffon.javafx.JavaFXApplication'
 }
 
-def eventClosure1 = binding.variables.containsKey('eventSetClasspath') ? eventSetClasspath : {cl ->}
-
 /**
  * Create a compile dependency for the plugin and also for the JavaFX runtime jar.
  */
-eventSetClasspath = { cl ->
-    eventClosure1(cl)
-
-    // Don't add the dependencies during uninstall since that will cause errors
-    // when the temporary javafx-rt-2.0.jar file is not actually found.
-    if (scriptName != 'UninstallPlugin') {
-        // Temporary copy of the jfxrt.jar file for compiling purposes.  Without this the
-        // compiler can't find the JavaFX ObjectProperty classes used by @FXBindable.
-        ant.copy(file: "${System.getenv('JAVAFX_HOME')}/rt/lib/jfxrt.jar",
-                 tofile: "${javafxPluginDir}/addon/javafxrt-2.0.jar")
-
-        griffonSettings.dependencyManager.flatDirResolver name: 'griffon-javafx-plugin', dirs: "${javafxPluginDir}/addon"
-        griffonSettings.dependencyManager.addPluginDependency('javafx', [
-            conf: 'compile',
-            group: 'org.codehaus.griffon.plugins',
-            name: 'javafxrt',
-            version: '2.0'
-        ])
-    }
-
-    if (compilingPlugin('javafx'))
-        return
-
-    // Again, don't add the dependencies during uninstall.
-    if (scriptName != 'UninstallPlugin') {
-        griffonSettings.dependencyManager.addPluginDependency('javafx', [
-            conf: 'compile',
-            group: 'org.codehaus.griffon.plugins',
-            name: 'griffon-javafx-addon',
-            version: javafxPluginVersion
-        ])
-    }
+eventClasspathStart = {
+    // Temporary copy of the jfxrt.jar file for compiling purposes.  Without this the
+    // compiler can't find the JavaFX ObjectProperty classes used by @FXBindable.
+    File javafxRuntimeJar = new File("${javafxPluginDir}/dist/javafxrt-2.0.jar")
+    ant.copy(file: "${System.getenv('JAVAFX_HOME')}/rt/lib/jfxrt.jar",
+             tofile: javafxRuntimeJar) 
+    griffonSettings.updateDependenciesFor 'compile', [javafxRuntimeJar]
+    griffonSettings.updateDependenciesFor 'runtime', [javafxRuntimeJar]
+    griffonSettings.updateDependenciesFor 'test', [javafxRuntimeJar]
 }
 
 /**
