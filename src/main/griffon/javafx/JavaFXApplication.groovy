@@ -65,7 +65,6 @@ class JavaFXApplication extends Application {
 
     @Override
     void stop() {
-        println "App shutting down"
         app.shutdown()
     }
 

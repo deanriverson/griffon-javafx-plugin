@@ -1,4 +1,4 @@
-<plugin name='javafx' version='0.2' griffonVersion='0.9.3 &gt; *' jdk='1.5'>
+<plugin name='javafx' version='0.3' griffonVersion='0.9.4 &gt; *' jdk='1.5'>
   <author>Dean Iverson</author>
   <authorEmail>deanriverson@gmail.com</authorEmail>
   <title>Griffon JavaFX Plugin</title>
@@ -10,6 +10,6 @@
     <resource>BuildConfig</resource>
   </resources>
   <dependencies>
-    <plugin name='groovyfx' version='0.2' />
+    <plugin name='groovyfx' version='0.2.1' />
   </dependencies>
 </plugin>

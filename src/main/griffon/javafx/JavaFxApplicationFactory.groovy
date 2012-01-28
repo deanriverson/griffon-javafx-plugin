@@ -28,7 +28,6 @@ import javafx.scene.paint.Color
 class JavaFxApplicationFactory extends AbstractFactory {
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        println "app from builder is ${builder.app}, stage is ${builder.app.primaryStage}"
         return builder.app.primaryStage;
     }
 
@@ -54,16 +53,12 @@ class JavaFxApplicationFactory extends AbstractFactory {
         final stage = node as Stage
         Scene scene = builder.sceneWrapper?.build() ?: new Scene(new Group(), 800, 600)
         stage.scene = scene
-        println "sceneWrapper is $builder.sceneWrapper"
-        println "stage is $stage, scene is $scene"
-        println "stage.scene is ${stage.scene}"
         stage.visible = true
     }
 
     @Override
     void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
         if (child instanceof SceneWrapper) {
-            println "Application got child SceneWrapper"
             builder.sceneWrapper = child
         }
     }
