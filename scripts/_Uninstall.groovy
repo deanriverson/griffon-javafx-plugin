@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 
 // check to see if we already have a JavaFXGriffonAddon
+/*
 configText = '''root.'JavafxGriffonAddon'.addon=true'''
 if(builderConfigFile.text.contains(configText)) {
     println 'Removing JavafxGriffonAddon from Builder.groovy'
     builderConfigFile.text -= configText
 }
+*/

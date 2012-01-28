@@ -1,6 +1,4 @@
-@artifact.package@
-
-import groovyx.javafx.beans.FXBindable
+@artifact.package@import groovyx.javafx.beans.FXBindable
 import griffon.util.GriffonNameUtils
 
 class @artifact.name@ {
