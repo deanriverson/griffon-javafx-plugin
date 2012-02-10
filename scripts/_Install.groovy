@@ -23,4 +23,4 @@ if(!(builderConfigFile.text.contains(configText))) {
 }
 */
 
-updateMetadata('app.toolkits': 'javafx')
+updateMetadata('app.toolkit': 'javafx')

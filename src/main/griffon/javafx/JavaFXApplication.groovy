@@ -22,7 +22,6 @@ import javafx.stage.Stage
 import javafx.stage.WindowEvent
 
 import griffon.util.GriffonExceptionHandler
-import griffon.core.*
 
 /**
  * @author Dean Iverson
@@ -35,7 +34,7 @@ class JavaFXApplication extends Application {
 
     @Override
     void init() {
-        UIThreadManager.instance.setUIThreadHandler(new JavaFXUIThreadHandler())
+        // UIThreadManager.instance.setUIThreadHandler(new JavaFXUIThreadHandler())
         GriffonExceptionHandler.registerExceptionHandler()
 
         String[] args = getParameters().getRaw().toArray(new String[0]);

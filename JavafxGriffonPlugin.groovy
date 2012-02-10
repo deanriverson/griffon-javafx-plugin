@@ -25,6 +25,8 @@ class JavafxGriffonPlugin {
     String license = 'Apache Software License 2.0'
     List toolkits = ['javafx']
     List platforms = []
+    String source = 'https://github.com/deanriverson/griffon-javafx-plugin'
+    String documentation = ''
     List authors = [
         [
             name: 'Dean Iverson',
@@ -35,6 +37,4 @@ class JavafxGriffonPlugin {
     String description = '''
 This plugin allows you to write JavaFX applications using the Griffon framework.
 '''
-
-    def documentation = 'http://griffon.codehaus.org/Javafx+Plugin'
 }

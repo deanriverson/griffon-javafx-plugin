@@ -16,18 +16,15 @@
 
 package griffon.javafx
 
-import griffon.util.UIThreadHandler
 import javafx.application.Platform
-import java.lang.reflect.InvocationTargetException
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.Executors
+import griffon.util.GriffonExceptionHandler
+import org.codehaus.griffon.runtime.util.AbstractUIThreadHandler
 
 /**
  * @author Dean Iverson
  */
-class JavaFXUIThreadHandler implements UIThreadHandler {
-    private ExecutorService threadPool = Executors.newFixedThreadPool(10)
+class JavaFXUIThreadHandler extends AbstractUIThreadHandler {
+    private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER = new GriffonExceptionHandler()
 
     /**
      * True if the current thread is the UI thread.
@@ -52,20 +49,21 @@ class JavaFXUIThreadHandler implements UIThreadHandler {
         } else {
             // Define a Runnable that executes the task on the JavaFX thread
             // then wait for it to complete
-            def runOnJavaFXThread = { executeAsync(runnable) } as Runnable
-            def future = threadPool.submit(runOnJavaFXThread)
+            Runnable runOnJavaFXThread = { executeAsync(runnable) } as Runnable
+            def future = DEFAULT_EXECUTOR_SERVICE.submit(wrapRunnable(runOnJavaFXThread))
             future.get()
         }
     }
 
-    /**
-     * Executes a code block outside of the UI thread.
-     */
-    void executeOutside(Runnable runnable) {
-        if(!isUIThread()) {
-            runnable.run();
-        } else {
-            threadPool.submit(runnable)
+    private Runnable wrapRunnable(Runnable runnable) {
+        new Runnable() {
+            public void run() {
+                try {
+                    runnable.run()
+                } catch (Throwable throwable) {
+                    UNCAUGHT_EXCEPTION_HANDLER.uncaughtException(Thread.currentThread(), throwable)
+                }
+            }
         }
     }
 }

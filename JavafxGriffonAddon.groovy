@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,51 +14,15 @@
  * limitations under the License.
  */
 
+import griffon.javafx.JavaFxApplicationFactory
+
+/**
+ * @author Dean Iverson
+ */
 class JavafxGriffonAddon {
-    // lifecycle methods
-
-    // called once, after the addon is created
-    //def addonInit(app) {
-    //}
-
-    // called once, after all addons have been inited
-    //def addonPostInit(app) {
-    //}
-
-    // called many times, after creating a builder
-    //def addonBuilderInit(app) {
-    //}
-
-    // called many times, after creating a builder and after
-    // all addons have been inited
-    //def addonBuilderPostInit(app) {
-    //}
-
-
-    // to add MVC Groups use create-mvc
-
-
-    // builder fields, these are added to all builders.
-    // closures can either be literal { it -> println it}
-    // or they can be method closures: this.&method
-
-    // adds methods to all builders
-    //def methods = [
-    //    methodName: { /*Closure*/ }
-    //]
-
-    // adds properties to all builders
-    //def props = [
-    //    propertyName: [
-    //        get: { /* optional getter closure */ },
-    //        set: {val-> /* optional setter closure */ },
-    //  ]
-    //]
-
-    // adds new factories to all builders
-    //def factories = [
-    //    factory : /*instance that extends Factory*/
-    //]
+    Map factories = [
+        application: new JavaFxApplicationFactory()
+    ]
 
     // adds application event handlers
     def events = [
@@ -67,26 +31,4 @@ class JavafxGriffonAddon {
             mvcGroup.builder.primaryStage = mvcGroup.view.app.primaryStage
         }
     ]
-
-    // handle synthetic node properties or
-    // intercept existing ones
-    //def attributeDelegates = [
-    //    {builder, node, attributes -> /*handler code*/ }
-    //]
-
-    // called before a node is instantiated
-    //def preInstantiateDelegates = [
-    //    {builder, attributes, value -> /*handler code*/ }
-    //]
-
-    // called after the node was instantiated
-    //def postInstantiateDelegates = [
-    //    {builder, attributes, node -> /*handler code*/ }
-    //]
-
-    // called after the node has been fully
-    // processed, including child content
-    //def postNodeCompletionDelegates = [
-    //    {builder, parent, node -> /*handler code*/ }
-    //]
 }
