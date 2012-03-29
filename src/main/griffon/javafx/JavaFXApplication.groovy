@@ -22,11 +22,14 @@ import javafx.stage.Stage
 import javafx.stage.WindowEvent
 
 import griffon.util.GriffonExceptionHandler
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * @author Dean Iverson
  */
 class JavaFXApplication extends Application {
+    private static final Logger LOG = LoggerFactory.getLogger(JavaFxApplicationFactory)
     private GriffonJavaFXApplication app
 
     JavaFXApplication() {
