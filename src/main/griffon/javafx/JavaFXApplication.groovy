@@ -22,11 +22,12 @@ import javafx.stage.Stage
 import javafx.stage.WindowEvent
 
 import griffon.util.GriffonExceptionHandler
+import griffon.application.StandaloneGriffonApplication
 
 /**
  * @author Dean Iverson
  */
-class JavaFXApplication extends Application {
+class JavaFXApplication extends Application implements StandaloneGriffonApplication {
     private GriffonJavaFXApplication app
 
     JavaFXApplication() {
@@ -69,6 +70,18 @@ class JavaFXApplication extends Application {
 
     public static void main(String[] args) {
         Application.launch(JavaFXApplication, args)
+    }
+
+    void bootstrap() {
+// initialize()
+    }
+
+    void realize() {
+// startups()
+    }
+
+    void show() {
+// ready()
     }
 }
 
