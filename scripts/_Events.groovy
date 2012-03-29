@@ -27,33 +27,24 @@ eventCreateConfigEnd = {
     buildConfig.griffon.application.mainClass = 'griffon.javafx.JavaFXApplication'
 }
 
-/**
- * Create a compile dependency for the plugin and also for the JavaFX runtime jar.
- */
-eventClasspathStart = {
-    // Temporary copy of the jfxrt.jar file for compiling purposes.  Without this the
-    // compiler can't find the JavaFX ObjectProperty classes used by @FXBindable.
-    File javafxRuntimeJar = new File("${javafxPluginDir}/dist/javafxrt-2.0.jar")
-    ant.copy(file: "${System.getenv('JAVAFX_HOME')}/rt/lib/jfxrt.jar",
-             tofile: javafxRuntimeJar) 
-    griffonSettings.updateDependenciesFor 'compile', [javafxRuntimeJar]
-    griffonSettings.updateDependenciesFor 'runtime', [javafxRuntimeJar]
-    griffonSettings.updateDependenciesFor 'test', [javafxRuntimeJar]
+//eventClasspathEnd = {
+eventCompileSourcesStart = {
+    final jfxrtFile = new File(ant.project.properties['environment.JAVAFX_HOME'], 'rt/lib/jfxrt.jar')
+    final jfxrtJarPath = ant.path {
+        pathElement(location: jfxrtFile.absolutePath)
+    }
+
+    ant.project.references['griffon.compile.classpath'].append(jfxrtJarPath)
+    ant.project.references['griffon.test.classpath'].append(jfxrtJarPath)
+
+    griffonSettings.updateDependenciesFor 'compile', [jfxrtFile]
+    griffonSettings.updateDependenciesFor 'test', [jfxrtFile]
 }
 
 /**
- * Delete the temporary copy of the JavaFX runtime jar so it's not on the path
- * at run time.
- */
-eventCopyLibsEnd = { jardir ->
-    def javafxJar = new File("staging/javafxrt-2.0.jar")
-    ant.delete(file: javafxJar, failonerror: false, quiet: true)
-}
-
-/**
- * Add the actual JavaFX runtime jar from its real location so that it can find
- * it's hard-coded native library dependencies.
- */
+* Add the actual JavaFX runtime jar from its real location so that it can find
+* it's hard-coded native library dependencies.
+*/
 eventRunAppTweak = { message ->
     def originalSetupRuntimeJars = setupRuntimeJars
     setupRuntimeJars = {
