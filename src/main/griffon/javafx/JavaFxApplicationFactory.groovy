@@ -16,15 +16,19 @@
 
 package griffon.javafx
 
-import javafx.stage.Stage
-import javafx.scene.Scene
 import javafx.scene.Group
-import groovyx.javafx.factory.SceneWrapper
-import javafx.scene.paint.Color
+import javafx.scene.Scene
+import javafx.stage.Stage
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
+ * Note: This factory is registered in JavafxGriffonAddon for the 'application' node.  However, the
+ * application node is currently not being used in JavaFX views, so this class is not currently being
+ * used either.
+ *
+ * I'm keeping it around (for now) in case I find a use for an application node in the views.
+ *
  * @author Dean Iverson
  */
 class JavaFxApplicationFactory extends AbstractFactory {
@@ -54,15 +58,16 @@ class JavaFxApplicationFactory extends AbstractFactory {
     @Override
     void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
         final stage = node as Stage
-        Scene scene = builder.sceneWrapper?.build() ?: new Scene(new Group(), 800, 600)
+        Scene scene = builder.currentScene ?: new Scene(new Group(), 800, 600)
         stage.scene = scene
-        stage.visible = true
+        stage.show()
+        //stage.visible = true
     }
 
     @Override
     void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
-        if (child instanceof SceneWrapper) {
-            builder.sceneWrapper = child
+        if (child instanceof Scene) {
+            builder.currentScene = child
         }
     }
 }

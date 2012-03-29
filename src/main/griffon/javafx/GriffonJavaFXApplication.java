@@ -19,11 +19,14 @@ package griffon.javafx;
 import javafx.stage.Stage;
 import griffon.core.UIThreadManager;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Dean Iverson
  */
 public class GriffonJavaFXApplication extends AbstractGriffonApplication {
+    private static final Logger LOG = LoggerFactory.getLogger(GriffonJavaFXApplication.class);
     Stage primaryStage;
 
     public GriffonJavaFXApplication() {
