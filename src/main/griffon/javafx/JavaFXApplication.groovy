@@ -22,13 +22,14 @@ import javafx.stage.Stage
 import javafx.stage.WindowEvent
 
 import griffon.util.GriffonExceptionHandler
+import griffon.application.StandaloneGriffonApplication
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
  * @author Dean Iverson
  */
-class JavaFXApplication extends Application {
+class JavaFXApplication extends Application implements StandaloneGriffonApplication {
     private static final Logger LOG = LoggerFactory.getLogger(JavaFxApplicationFactory)
     private GriffonJavaFXApplication app
 
@@ -72,6 +73,22 @@ class JavaFXApplication extends Application {
 
     public static void main(String[] args) {
         Application.launch(JavaFXApplication, args)
+    }
+
+    // The following methods are required for running applications
+    // in integration tests. Method bodies have been left unspecified
+    // on purpose as I haven't quite grasped the JavaFX init cycle
+
+    void bootstrap() {
+        // initialize()
+    }
+
+    void realize() {
+        // startups()
+    }
+
+    void show() {
+        // ready()
     }
 }
 
