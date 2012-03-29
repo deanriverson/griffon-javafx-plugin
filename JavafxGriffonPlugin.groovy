@@ -64,7 +64,7 @@ found [here][2] and JavaFX documentation can be found [here][3].  In addition, y
 Your main application's view might look like this (in fact it will look *exactly* like this if you create your
 application with the [JavaFX archetype][4]):
 
-    stage(title: '@griffon.app.class.name@', visible: true, centerOnScreen: true) {
+    stage(title: 'My Cool JavaFX App', visible: true, centerOnScreen: true) {
         scene(fill: black, width: 400, height: 300) {
             hbox(padding: 80) {
                 text(text: "Java", font: "80pt sanserif") {
