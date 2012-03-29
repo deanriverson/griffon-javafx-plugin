@@ -25,7 +25,7 @@ class JavafxGriffonPlugin {
     String license = 'Apache Software License 2.0'
     // Toolkit compatibility. No value means compatible with all
     // Valid values are: swing, javafx, swt, pivot, gtk
-    List toolkits = ['swing', 'javafx']
+    List toolkits = ['javafx']
     // Platform compatibility. No value means compatible with all
     // Valid values are:
     // linux, linux64, windows, windows64, macosx, macosx64, solaris
