@@ -27,36 +27,3 @@ eventCreateConfigEnd = {
     buildConfig.griffon.application.mainClass = 'griffon.javafx.JavaFXApplication'
 }
 
-//eventClasspathEnd = {
-eventCompileSourcesStart = {
-    final jfxrtFile = new File(ant.project.properties['environment.JAVAFX_HOME'], 'rt/lib/jfxrt.jar')
-    final jfxrtJarPath = ant.path {
-        pathElement(location: jfxrtFile.absolutePath)
-    }
-
-    ant.project.references['griffon.compile.classpath'].append(jfxrtJarPath)
-    ant.project.references['griffon.test.classpath'].append(jfxrtJarPath)
-
-    griffonSettings.updateDependenciesFor 'compile', [jfxrtFile]
-    griffonSettings.updateDependenciesFor 'test', [jfxrtFile]
-}
-
-/**
-* Add the actual JavaFX runtime jar from its real location so that it can find
-* it's hard-coded native library dependencies.
-*/
-eventRunAppTweak = { message ->
-    def originalSetupRuntimeJars = setupRuntimeJars
-    setupRuntimeJars = {
-        def runtimeJars = []
-
-        if (originalSetupRuntimeJars)
-            runtimeJars = originalSetupRuntimeJars()
-
-        def javafxrt = new File("${System.getenv('JAVAFX_HOME')}/rt/lib/jfxrt.jar")
-        if (javafxrt)
-            runtimeJars << javafxrt
-
-        return runtimeJars
-    }
-}
