@@ -19,6 +19,7 @@ package griffon.javafx
 import javafx.application.Platform
 import griffon.util.GriffonExceptionHandler
 import org.codehaus.griffon.runtime.util.AbstractUIThreadHandler
+import java.util.concurrent.FutureTask
 
 /**
  * @author Dean Iverson
@@ -45,25 +46,20 @@ class JavaFXUIThreadHandler extends AbstractUIThreadHandler {
      */
     void executeSync(Runnable runnable) {
         if(isUIThread()) {
-            runnable.run();
+            runnable.run()
         } else {
-            // Define a Runnable that executes the task on the JavaFX thread
-            // then wait for it to complete
-            Runnable runOnJavaFXThread = { executeAsync(runnable) } as Runnable
-            def future = DEFAULT_EXECUTOR_SERVICE.submit(wrapRunnable(runOnJavaFXThread))
-            future.get()
-        }
-    }
-
-    private Runnable wrapRunnable(Runnable runnable) {
-        new Runnable() {
-            public void run() {
+            // Define a Runnable that executes the task on the JavaFX thread using
+            // Platform.runLater, then wait for it to complete.
+            FutureTask<Void> task = new FutureTask({
                 try {
                     runnable.run()
                 } catch (Throwable throwable) {
                     UNCAUGHT_EXCEPTION_HANDLER.uncaughtException(Thread.currentThread(), throwable)
                 }
-            }
+            }, null)
+
+            Platform.runLater(task)
+            task.get()
         }
     }
 }
