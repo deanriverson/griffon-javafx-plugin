@@ -1,7 +1,7 @@
 What's New in Version 0.5
 =========================
 Refactored the application classes so that integration tests will run.
-Fixed a execSync threding issue in the JavaFX thread handler.
+Fixed an execSync threading issue in the JavaFX thread handler.
 
 What's New in Version 0.4
 =========================
