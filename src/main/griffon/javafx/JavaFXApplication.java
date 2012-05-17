@@ -16,17 +16,18 @@
 
 package griffon.javafx;
 
+import griffon.application.StandaloneGriffonApplication;
+import griffon.core.UIThreadManager;
+import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
-import javafx.application.Application;
-
-import griffon.core.UIThreadManager;
-import griffon.util.GriffonExceptionHandler;
-import griffon.application.StandaloneGriffonApplication;
+import javafx.stage.Window;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static griffon.util.GriffonExceptionHandler.registerExceptionHandler;
+import static griffon.util.GriffonExceptionHandler.sanitize;
 
 /**
  * This class is the main entry point for a Griffon JavaFX application.  It uses the
@@ -37,6 +38,10 @@ import org.slf4j.LoggerFactory;
  */
 class JavaFXApplication extends AbstractGriffonApplication implements StandaloneGriffonApplication {
     private static final Logger LOG = LoggerFactory.getLogger(JavaFXApplication.class);
+    private boolean primaryStageDispensed = false;
+    private final WindowManager windowManager;
+    private WindowDisplayHandler windowDisplayHandler;
+    private final WindowDisplayHandler defaultWindowDisplayHandler = new ConfigurableWindowDisplayHandler();
 
     private Application fxApp;
     private Stage primaryStage;
@@ -49,6 +54,7 @@ class JavaFXApplication extends AbstractGriffonApplication implements Standalone
 
     public JavaFXApplication(String[] args) {
         super(args);
+        windowManager = new WindowManager(this);
     }
 
     public HostServices getHostServices() {
@@ -89,7 +95,7 @@ class JavaFXApplication extends AbstractGriffonApplication implements Standalone
             } catch (InterruptedException e) {
                 if (LOG.isErrorEnabled())
                     LOG.error("Interrupted while waiting for JavaFX initialization: " + e.getMessage());
-                GriffonExceptionHandler.sanitize(e).printStackTrace();
+                sanitize(e).printStackTrace();
             }
         }
     }
@@ -99,30 +105,52 @@ class JavaFXApplication extends AbstractGriffonApplication implements Standalone
     }
 
     public void show() {
+        Window startingWindow = windowManager.getStartingWindow();
+        windowManager.show(startingWindow);
         ready();
     }
 
     public Object createApplicationContainer() {
-        return primaryStage;
+        if (primaryStageDispensed) {
+            return new Stage();
+        } else {
+            primaryStageDispensed = true;
+            return primaryStage;
+        }
+    }
+
+    public WindowManager getWindowManager() {
+        return windowManager;
+    }
+
+    public WindowDisplayHandler getWindowDisplayHandler() {
+        return windowDisplayHandler;
+    }
+
+    public void setWindowDisplayHandler(WindowDisplayHandler windowDisplayHandler) {
+        this.windowDisplayHandler = windowDisplayHandler;
+    }
+
+    public final WindowDisplayHandler resolveWindowDisplayHandler() {
+        return windowDisplayHandler != null ? windowDisplayHandler : defaultWindowDisplayHandler;
     }
 
     private void doGriffonInit() {
-        // windowManager = new WindowManager(this);
         UIThreadManager.getInstance().setUIThreadHandler(new JavaFXUIThreadHandler());
-        // addShutdownHandler(windowManager);
+        addShutdownHandler(windowManager);
 
         initialize();
     }
 
     public static void main(String[] args) {
-        GriffonExceptionHandler.registerExceptionHandler();
+        registerExceptionHandler();
         StandaloneGriffonApplication app = new JavaFXApplication(args);
         try {
             app.bootstrap();
             app.realize();
             app.show();
         } catch (RuntimeException e) {
-            GriffonExceptionHandler.sanitize(e).printStackTrace();
+            sanitize(e).printStackTrace();
         }
     }
 }

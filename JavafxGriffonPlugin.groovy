@@ -18,13 +18,13 @@
  * @author Dean Iverson
  */
 class JavafxGriffonPlugin {
-    String version = '0.5'
+    String version = '0.6'
     String griffonVersion = '0.9.5 > *'
     Map dependsOn = [groovyfx: '0.4']
     List pluginIncludes = []
     String license = 'Apache Software License 2.0'
     // Toolkit compatibility. No value means compatible with all
-    // Valid values are: swing, javafx, swt, pivot, gtk
+    // Valid values are: swing, javafx, javafx, pivot, gtk
     List toolkits = ['javafx']
     // Platform compatibility. No value means compatible with all
     // Valid values are:
