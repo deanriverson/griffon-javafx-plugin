@@ -79,7 +79,7 @@ class JavaFXApplication extends AbstractGriffonApplication implements Standalone
         synchronized (fxInitComplete) {
             new Thread(new Runnable() {
                 public void run() {
-                    Application.launch(FXApplicationStub.class, getStartupArgs());
+                Application.launch(FXApplicationStub.class, getStartupArgs());
                 }
             }).start();
 

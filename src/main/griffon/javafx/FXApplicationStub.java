@@ -16,9 +16,11 @@
 
 package griffon.javafx;
 
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.application.Application;
 
+import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +50,17 @@ public class FXApplicationStub extends Application {
     public void start(Stage stage) {
         griffonApp.setFXApp(this);
         griffonApp.setPrimaryStage(stage);
+
+        // Ugly hack to get the system to shut down correctly.  Something is preventing
+        // the app thread from exiting when exceptions are thrown.
+        //
+        // Note: Calling Platform.exit() doesn't even work - I have to shoot Java in the
+        // head with System.exit().
+        stage.setOnHidden(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent t) {
+                System.exit(0);
+            }
+        });
 
         synchronized (griffonApp.fxInitComplete) {
             griffonApp.fxInitComplete.notify();
