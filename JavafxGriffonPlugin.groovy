@@ -18,13 +18,13 @@
  * @author Dean Iverson
  */
 class JavafxGriffonPlugin {
-    String version = '0.5.1'
+    String version = '0.6'
     String griffonVersion = '0.9.5 > *'
-    Map dependsOn = [groovyfx: '0.5']
+    Map dependsOn = [groovyfx: '0.6']
     List pluginIncludes = []
     String license = 'Apache Software License 2.0'
     // Toolkit compatibility. No value means compatible with all
-    // Valid values are: swing, javafx, swt, pivot, gtk
+    // Valid values are: swing, javafx, javafx, pivot, gtk
     List toolkits = ['javafx']
     // Platform compatibility. No value means compatible with all
     // Valid values are:
@@ -61,10 +61,10 @@ found [here][2] and JavaFX documentation can be found [here][3].  In addition, y
 
 ### Example
 
-Your main application's view might look like this (in fact it will look *exactly* like this if you create your
+Your main application's view might look like this (in fact it will look very similar if you create your
 application with the [JavaFX archetype][4]):
 
-    stage(title: 'My Cool JavaFX App', visible: true, centerOnScreen: true) {
+    application(title: 'Cool App', sizeToScene: true, centerOnScreen: true) {
         scene(fill: black, width: 400, height: 300) {
             hbox(padding: 80) {
                 text(text: "Java", font: "80pt sanserif") {

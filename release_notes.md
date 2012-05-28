@@ -1,3 +1,8 @@
+What's New in Version 0.6
+=========================
+Added support for Griffon's WindowManager functionality.
+Updated to latest version of GroovyFX plugin, which includes the official release version of GroovyFX 0.2.
+
 What's New in Version 0.5
 =========================
 Refactored the application classes so that integration tests will run.
