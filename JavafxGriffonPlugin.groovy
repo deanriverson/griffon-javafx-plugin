@@ -18,8 +18,8 @@
  * @author Dean Iverson
  */
 class JavafxGriffonPlugin {
-    String version = '0.6.1'
-    String griffonVersion = '0.9.5 > *'
+    String version = '0.7-SNAPSHOT'
+    String griffonVersion = '1.0.1 > *'
     Map dependsOn = [groovyfx: '0.6.1']
     List pluginIncludes = []
     String license = 'Apache Software License 2.0'
@@ -58,6 +58,42 @@ Usage
 Once installed, you can use any of the nodes provided by GroovyFX in your views.  GroovyFX documentation can be
 found [here][2] and JavaFX documentation can be found [here][3].  In addition, you will be able to use the
 @FXBindable annotation on your models.
+
+### DEfault Imports
+
+This plugin enables additional imports to be used in Groovy based artifacts. Here's the full list per type
+* Controller
+** javafx.collections
+** javafx.application
+** javafx.util
+* Model
+** javafx.collections
+** javafx.beans
+** javafx.beans.binding
+** javafx.beans.property
+** javafx.util.
+** groovyx.javafx.beans.
+* View
+** javafx.collections
+** javafx.concurrent
+** javafx.event
+** javafx.geometry
+** javafx.scene
+** javafx.scene.chart
+** javafx.scene.control
+** javafx.scene.control.cell
+** javafx.scene.effect
+** javafx.scene.image
+** javafx.scene.input
+** javafx.scene.layout
+** javafx.scene.media
+** javafx.scene.paint
+** javafx.scene.shape
+** javafx.scene.text
+** javafx.scene.transform
+** javafx.scene.web
+** javafx.stage
+** javafx.util
 
 ### Example
 
