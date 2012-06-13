@@ -19,7 +19,7 @@
  */
 class JavafxGriffonPlugin {
     String version = '0.7-SNAPSHOT'
-    String griffonVersion = '1.0.1 > *'
+    String griffonVersion = '1.0.0 > *'
     Map dependsOn = [groovyfx: '0.6.1']
     List pluginIncludes = []
     String license = 'Apache Software License 2.0'
