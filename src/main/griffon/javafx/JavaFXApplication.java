@@ -79,25 +79,28 @@ class JavaFXApplication extends AbstractGriffonApplication implements Standalone
     public void bootstrap() {
         FXApplicationStub.setGriffonApp(this);
 
-        // Application.launch doesn't return until the app is closed, so we need to
-        // launch it in a different thread and wait for the FXApplicationStub to
-        // notify us that JavaFX initialization is complete.
-        synchronized (fxInitComplete) {
-            new Thread(new Runnable() {
-                public void run() {
-                Application.launch(FXApplicationStub.class, getStartupArgs());
-                }
-            }).start();
+        if (fxApp == null) {
+            // Application.launch doesn't return until the app is closed, so we need to
+            // launch it in a different thread and wait for the FXApplicationStub to
+            // notify us that JavaFX initialization is complete.
+            synchronized (fxInitComplete) {
+                new Thread(new Runnable() {
+                    public void run() {
+                        Application.launch(FXApplicationStub.class, getStartupArgs());
+                    }
+                }).start();
 
-            try {
-                fxInitComplete.wait();
-                doGriffonInit();
-            } catch (InterruptedException e) {
-                if (LOG.isErrorEnabled())
-                    LOG.error("Interrupted while waiting for JavaFX initialization: " + e.getMessage());
-                sanitize(e).printStackTrace();
+                try {
+                    fxInitComplete.wait();
+                } catch (InterruptedException e) {
+                    if (LOG.isErrorEnabled())
+                        LOG.error("Interrupted while waiting for JavaFX initialization: " + e.getMessage());
+                    sanitize(e).printStackTrace();
+                }
             }
         }
+
+        continueGriffonInitialization();
     }
 
     public void realize() {
@@ -135,7 +138,7 @@ class JavaFXApplication extends AbstractGriffonApplication implements Standalone
         return windowDisplayHandler != null ? windowDisplayHandler : defaultWindowDisplayHandler;
     }
 
-    private void doGriffonInit() {
+    private void continueGriffonInitialization() {
         UIThreadManager.getInstance().setUIThreadHandler(new JavaFXUIThreadHandler());
         addShutdownHandler(windowManager);
 
