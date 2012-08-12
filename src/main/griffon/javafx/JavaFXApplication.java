@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import static griffon.util.GriffonExceptionHandler.sanitize;
  *
  * @author Dean Iverson
  */
-class JavaFXApplication extends AbstractGriffonApplication implements StandaloneGriffonApplication {
+public class JavaFXApplication extends AbstractGriffonApplication implements StandaloneGriffonApplication {
     private static final Logger LOG = LoggerFactory.getLogger(JavaFXApplication.class);
     private boolean primaryStageDispensed = false;
     private final WindowManager windowManager;
