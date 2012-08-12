@@ -15,6 +15,8 @@
  */
 
 /**
+ * @author Danno Ferrin
+ * @author Josh Reed
  * @author Dean Iverson
  * @author Andres Almiray
  */
@@ -27,3 +29,33 @@ eventCreateConfigEnd = {
     buildConfig.griffon.application.mainClass = 'griffon.javafx.JavaFXApplication'
 }
 
+
+eventCleanPackage = { type ->
+    ant.delete(dir: "${projectWorkDir}/installer/${type}", failonerror: false)
+}
+
+eventMakePackage = { type ->
+    println "Considering $type"
+    switch(type.toUpperCase()) {
+        case 'JFX-NATIVE':
+        case 'JFXNATIVE':
+        case 'NATIVE':
+            buildPackage('JfxNative')
+            break
+    }
+}
+
+buildPackage = { type ->
+    println "packaging $type"
+    println 'Prepare'+ type
+    includePluginScript('javafx', 'Prepare'+ type)
+    println  'Create'+ type
+    includePluginScript('javafx', 'Create'+ type)
+
+    println ("preparePackage${type}")
+    println ("createPackage${type}")
+    includeTargets.binding.with {
+        getVariable("preparePackage${type}")()
+        getVariable("createPackage${type}")()
+    }
+}
