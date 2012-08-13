@@ -24,6 +24,8 @@ package scripts
  * @since 0.7
  */
 
+import static griffon.util.GriffonApplicationUtils.isMacOSX
+
 installerPluginBase = getPluginDirForName('javafx').file as String
 includePluginScript('javafx','_Prepare')
 
@@ -33,14 +35,33 @@ target(name: 'preparePackageJfxNative', description: '', prehook: null, posthook
     installerWorkDir = "${projectWorkDir}/installer/jfxnative"
     binaryDir = installerWorkDir + '/binary'
     installerResourcesDir = installerWorkDir + '/resources'
+    prettyAppName = griffon.util.GriffonNameUtils.getNaturalName(griffonAppName)
 
     ant.copy(todir: installerResourcesDir) {
         fileset(dir: "${installerPluginBase}/src/templates/jfxnative")
     }
 
-    File macIcon = new File("$installerResourcesDir/package/macosx/${griffonAppName}.icns")
-    if (!macIcon.exists()) {
-        ant.copy toFile: macIcon, file: "${installerPluginBase}/src/templates/jfxnative/package/macosx/griffon.icns"
+    if (isMacOSX()) {
+        iconWorkDir = "$installerWorkDir/icon.iconset"
+        ant.mkdir(dir: iconWorkDir)
+        def iconDef = buildConfig.deploy.application.icon.default
+        if (iconDef) {
+            ant.copy toFile: "$iconWorkDir/icon_${iconDef.width}x${iconDef.height}.png", file: "$basedir/griffon-app/resources/$iconDef.name"
+        } else {
+            ant.copy toFile: "$iconWorkDir/icon_64x64.png", file: 'griffon-icon-64x64.png'
+        }
+        ant.exec(executable: 'iconutil') {
+            arg value: '--convert'
+            arg value: 'icns'
+            arg value: iconWorkDir
+        }
+
+        [prettyAppName, "$prettyAppName-volume"].each {
+            File macIcon = new File("$installerResourcesDir/package/macosx/${it}.icns")
+            if (!macIcon.exists()) {
+                ant.copy toFile: macIcon, file: "$installerWorkDir/icon.icns"
+            }
+        }
     }
 
     prepareDirectories()
