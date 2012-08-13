@@ -93,7 +93,7 @@ target(name: 'createPackageJfxNative', description: '', prehook: null, posthook:
             height: argsMap['applet-height'] ?: 640,
             outdir: "$distDir/jfxnative/",
             nativeBundles: 'all',
-            embedJNLP: 'true',
+            //verbose: "true",
             outfile: "$griffonAppName") {
 
         fxant.application(refid: 'fxApplication')
