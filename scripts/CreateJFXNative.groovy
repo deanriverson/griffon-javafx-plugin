@@ -68,7 +68,7 @@ target(name: 'createPackageJfxNative', description: '', prehook: null, posthook:
 
     fxant.application(
             id: 'fxApplication',
-            name: griffonAppName,
+            name: griffon.util.GriffonNameUtils.getNaturalName(griffonAppName),
             mainClass: 'griffon.javafx.JavaFXApplication',
             //fallbackClass: //FIXME
     )
@@ -89,12 +89,13 @@ target(name: 'createPackageJfxNative', description: '', prehook: null, posthook:
         fxant.fileset dir: "$projectWorkDir/classes/main", includes: '**/*'
     }
 
+
     fxant.deploy(width: argsMap['applet-width'] ?: 480,
             height: argsMap['applet-height'] ?: 640,
             outdir: "$distDir/jfxnative/",
             nativeBundles: 'all',
             //verbose: "true",
-            outfile: "$griffonAppName") {
+            outfile: "${griffon.util.GriffonNameUtils.getNaturalName(griffonAppName)}") {
 
         fxant.application(refid: 'fxApplication')
 
@@ -103,7 +104,7 @@ target(name: 'createPackageJfxNative', description: '', prehook: null, posthook:
             fileset dir: "$installerWorkDir/binary/lib", includes: '*.jar'
         }
 
-        fxant.info(title: griffonAppName) {
+        fxant.info(title: griffon.util.GriffonNameUtils.getNaturalName(griffonAppName)) {
             icon(href: buildConfig.deploy.application.icon.default.name ?: 'griffon-icon-64x64.png',
                     kind: 'default',
                     width: buildConfig.deploy.application.icon.default.width ?: '64',
