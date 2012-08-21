@@ -1,4 +1,3 @@
-package scripts
 /*
  * Copyright 2008-2012 the original author or authors.
  *

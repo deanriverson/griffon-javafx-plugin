@@ -1,4 +1,3 @@
-package scripts
 /*
  * Copyright 2009-2012 the original author or authors.
  *
@@ -31,14 +30,14 @@ includeTargets << griffonScript("Package")
 includePluginScript("javafx","_Prepare")
 
 target(name: 'copyAllAppArtifacts', description: '', prehook: null, posthook: null) {
-   depends(createConfig)
+    depends(createConfig)
 
-   distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"
-   targetDistDir = binaryDir
-   System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
+    distDir = buildConfig.griffon.dist.dir ?: "${basedir}/dist"
+    targetDistDir = binaryDir
+    System.setProperty(RunMode.KEY, RunMode.CUSTOM.name)
 
-   create_binary_package()
-   copyAppResources()
+    create_binary_package()
+    copyAppResources()
 }
 
 target(name: 'copyAppResources', description: '', prehook: null, posthook: null) {
