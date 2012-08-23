@@ -25,6 +25,7 @@
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX
 import static griffon.util.GriffonApplicationUtils.isWindows
+import static griffon.util.GriffonApplicationUtils.isLinux
 
 import net.sf.image4j.codec.ico.ICOEncoder
 import net.sf.image4j.codec.bmp.BMPEncoder
@@ -32,6 +33,7 @@ import java.awt.Image
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 import java.awt.Toolkit
+import javax.imageio.ImageIO
 
 
 installerPluginBase = getPluginDirForName('javafx').file as String
@@ -43,24 +45,45 @@ target(name: 'preparePackageJfxNative', description: '', prehook: null, posthook
     installerWorkDir = "${projectWorkDir}/installer/jfxnative"
     binaryDir = installerWorkDir + '/binary'
     installerResourcesDir = installerWorkDir + '/resources'
+    mkdir dir:installerResourcesDir
+
     prettyAppName = griffon.util.GriffonNameUtils.getNaturalName(griffonAppName)
+
+    def iconDef = buildConfig.deploy.application.icon.default
+    Image icon
+    if (iconDef) {
+        icon = Toolkit.defaultToolkit.createImage("$basedir/griffon-app/resources/$iconDef.name")
+    } else {
+        icon = Toolkit.defaultToolkit.createImage('griffon-icon-64x64.png')
+    }
+
+    BufferedImage bi = new BufferedImage(icon.width, icon.height, BufferedImage.TYPE_INT_ARGB)
+    bi.graphics.drawImage(icon, 0, 0, null)
+    def pngImageLocation = "$installerWorkDir/${griffonAppName}.png"
+    ImageIO.write(bi, "png", new File(pngImageLocation));
+
+    if (isLinux()) {
+        ant.mkdir(dir: "$installerResourcesDir/package/linux")
+        [prettyAppName].each {
+            File png = new File("$installerResourcesDir/package/linux/${it}.png")
+            if (!png.exists()) {
+                ant.copy toFile: png, file: pngImageLocation
+            }
+        }
+    }
 
     if (isMacOSX()) {
         iconWorkDir = "$installerWorkDir/icon.iconset"
         ant.mkdir(dir: iconWorkDir)
-        def iconDef = buildConfig.deploy.application.icon.default
-        if (iconDef) {
-            ant.copy toFile: "$iconWorkDir/icon_${iconDef.width}x${iconDef.height}.png", file: "$basedir/griffon-app/resources/$iconDef.name"
-        } else {
-            ant.copy toFile: "$iconWorkDir/icon_64x64.png", file: 'griffon-icon-64x64.png'
-        }
+        ant.copy toFile: "$iconWorkDir/icon_${iconDef.width}x${iconDef.height}.png", file: pngImageLocation
+
         ant.exec(executable: 'iconutil') {
             arg value: '--convert'
             arg value: 'icns'
             arg value: iconWorkDir
         }
 
-        ant.mkdir(dir: "$installerResourcesDir/package/macosx/")
+        ant.mkdir(dir: "$installerResourcesDir/package/macosx")
         [prettyAppName, "$prettyAppName-volume"].each {
             File macIcon = new File("$installerResourcesDir/package/macosx/${it}.icns")
             if (!macIcon.exists()) {
@@ -70,19 +93,9 @@ target(name: 'preparePackageJfxNative', description: '', prehook: null, posthook
     }
 
     if (isWindows()) {
-        def iconDef = buildConfig.deploy.application.icon.default
-        Image icon
-        if (iconDef) {
-            icon = Toolkit.defaultToolkit.createImage("$basedir/griffon-app/resources/$iconDef.name")
-        } else {
-            icon = Toolkit.defaultToolkit.createImage('griffon-icon-64x64.png')
-        }
-
-        BufferedImage bi = new BufferedImage(icon.width, icon.height, BufferedImage.TYPE_INT_ARGB)
-        bi.graphics.drawImage(icon, 0, 0, null)
         ICOEncoder.write(bi, new File("$installerWorkDir/icon.ico"))
 
-        ant.mkdir(dir: "$installerResourcesDir/package/windows/")
+        ant.mkdir(dir: "$installerResourcesDir/package/windows")
         [prettyAppName].each {
             File ico = new File("$installerResourcesDir/package/windows/${it}.ico")
             if (!ico.exists()) {
