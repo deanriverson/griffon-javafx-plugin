@@ -64,7 +64,7 @@ target(name: 'preparePackageJfxNative', description: '', prehook: null, posthook
 
     if (isLinux()) {
         ant.mkdir(dir: "$installerResourcesDir/package/linux")
-        [prettyAppName].each {
+        [prettyAppName.replaceAll('\\s', '')].each {
             File png = new File("$installerResourcesDir/package/linux/${it}.png")
             if (!png.exists()) {
                 ant.copy toFile: png, file: pngImageLocation
