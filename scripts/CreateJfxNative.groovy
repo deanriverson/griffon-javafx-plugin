@@ -66,45 +66,71 @@ target(name: 'createPackageJfxNative', description: '', prehook: null, posthook:
     ant.mkdir(dir: distDir + "/jfxnative")
 
 
+    def prettyAppName = griffon.util.GriffonNameUtils.getNaturalName(griffonAppName)
+
     fxant.application(
-            id: 'fxApplication',
-            name: griffon.util.GriffonNameUtils.getNaturalName(griffonAppName),
+            id: griffonAppName,
+            name: prettyAppName,
             mainClass: 'griffon.javafx.JavaFXApplication',
             //fallbackClass: //FIXME
     )
 
+    def tempJarDir = "${projectWorkDir}/jars/${griffonAppName}"
+    mkdir dir: tempJarDir
+    unjar src: "$installerWorkDir/binary/lib/${griffonAppName}.jar", dest: tempJarDir
+
     fxant.jar(destFile: "$distDir/jfxnative/${griffonAppName}Jar.jar") {
 
-        fxant.application(refid: 'fxApplication')
+        fxant.application(refid: griffonAppName)
 
         fxant.resources {
-            fileset dir: "$installerWorkDir/binary/lib", includes: '*.jar'
+            fileset dir: "$installerWorkDir/binary/lib", includes: '*.jar', excludes: "${griffonAppName}.jar"
         }
 
-        //fxant.manifest {
-        //    attribute name:'Implementation-Title', value: griffonAppName
-        //    attribute name:'Implementation-Version', value: griffonAppVersion
-        //}
 
-        fxant.fileset dir: "$projectWorkDir/classes/main", includes: '**/*'
+        fxant.manifest {
+            manifestMap.each { k, v ->
+                fxant.attribute(name: k, value: v)
+            }
+            //attribute name:'Implementation-Title', value: griffonAppName
+            //attribute name:'Implementation-Version', value: griffonAppVersion
+        }
+
+        fxant.fileset dir: tempJarDir
     }
 
+    boolean configSaysJarSigning = buildConfig.griffon.jars.sign
+    boolean doJarSigning = configSaysJarSigning
+    if (doJarSigning) {
+        def signJarParams = [:]
+        for (key in ['alias', 'storepass', 'keystore', 'storetype', 'keypass', 'verbose']) {
+            if (buildConfig.signingkey.params."$key") {
+                signJarParams[key] = buildConfig.signingkey.params[key]
+            }
+        }
+        fxant.signjar(signJarParams) {
+            fileset file: "$distDir/jfxnative/${griffonAppName}Jar.jar"
+        }
+        fxant.signjar(signJarParams) {
+            fileset dir: "$installerWorkDir/binary/lib", excludes: "${griffonAppName}.jar"
+        }
+    }
 
     fxant.deploy(width: argsMap['applet-width'] ?: 480,
             height: argsMap['applet-height'] ?: 640,
             outdir: "$distDir/jfxnative/",
             nativeBundles: 'all',
             //verbose: "true",
-            outfile: "${griffon.util.GriffonNameUtils.getNaturalName(griffonAppName)}") {
+            outfile: "$prettyAppName") {
 
-        fxant.application(refid: 'fxApplication')
+        fxant.application(refid: griffonAppName)
 
         fxant.resources {
             fileset file: "$distDir/jfxnative/${griffonAppName}Jar.jar"
-            fileset dir: "$installerWorkDir/binary/lib", includes: '*.jar'
+            fileset dir: "$installerWorkDir/binary/lib", excludes: "${griffonAppName}.jar"
         }
 
-        fxant.info(title: griffon.util.GriffonNameUtils.getNaturalName(griffonAppName)) {
+        fxant.info(title: prettyAppName) {
             icon(href: buildConfig.deploy.application.icon.default.name ?: 'griffon-icon-64x64.png',
                     kind: 'default',
                     width: buildConfig.deploy.application.icon.default.width ?: '64',

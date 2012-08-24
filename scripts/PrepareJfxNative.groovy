@@ -42,6 +42,10 @@ includePluginScript('javafx','_Prepare')
 target(name: 'preparePackageJfxNative', description: '', prehook: null, posthook: null) {
     event('PreparePackageStart', ['jfxnative'])
 
+    // turn off native Griffon code signing.  JFX does it's own thing
+    _skipSigning = true
+
+    // prepare the installer icons
     installerWorkDir = "${projectWorkDir}/installer/jfxnative"
     binaryDir = installerWorkDir + '/binary'
     installerResourcesDir = installerWorkDir + '/resources'
