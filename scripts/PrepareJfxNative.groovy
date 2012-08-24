@@ -58,7 +58,7 @@ target(name: 'preparePackageJfxNative', description: '', prehook: null, posthook
     if (iconDef) {
         icon = Toolkit.defaultToolkit.createImage("$basedir/griffon-app/resources/$iconDef.name")
     } else {
-        icon = Toolkit.defaultToolkit.createImage('griffon-icon-64x64.png')
+        icon = Toolkit.defaultToolkit.createImage('griffon-icon-32x32.png')
     }
 
     BufferedImage bi = new BufferedImage(icon.width, icon.height, BufferedImage.TYPE_INT_ARGB)
@@ -79,7 +79,19 @@ target(name: 'preparePackageJfxNative', description: '', prehook: null, posthook
     if (isMacOSX()) {
         iconWorkDir = "$installerWorkDir/icon.iconset"
         ant.mkdir(dir: iconWorkDir)
-        ant.copy toFile: "$iconWorkDir/icon_${iconDef.width}x${iconDef.height}.png", file: pngImageLocation
+        if ([16,32,128,256,512].contains(icon.width)) {
+            // only accept happy sized icons.  64x64 is not happy.
+            ant.copy toFile: "$iconWorkDir/icon_${icon.width}x${icon.height}.png", file: pngImageLocation
+        } else {
+            // hammer it into 128x128
+            bi = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB)
+            def g = bi.graphics
+            def t = new AffineTransform()
+            t.scale(128f/icon.width, 128f/icon.height)
+            g.transform = t
+            g.drawImage(icon, 0, 0, null)
+            ImageIO.write(bi, "png", new File("$iconWorkDir/icon_128x128.png"));
+        }
 
         ant.exec(executable: 'iconutil') {
             arg value: '--convert'
