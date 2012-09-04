@@ -1,3 +1,8 @@
+What's New in Version 0.7
+=========================
+Added native JavaFX packaging support, using the 'jfx-native'
+Updated to latest version of GroovyFX plugin, which includes the official release version of GroovyFX 0.3.
+
 What's New in Version 0.6
 =========================
 Added support for Griffon's WindowManager functionality.
