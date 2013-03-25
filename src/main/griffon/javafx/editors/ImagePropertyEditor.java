@@ -29,13 +29,10 @@ import java.net.URL;
  * @author Andres Almiray
  */
 public class ImagePropertyEditor extends AbstractPropertyEditor {
-    public void setAsText(String value) throws IllegalArgumentException {
-        setValue(value);
-    }
-
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof File) {
             handleAsFile((File) value);
@@ -46,7 +43,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
         } else if (value instanceof InputStream) {
             handleAsInputStream((InputStream) value);
         } else if (value instanceof Image) {
-            super.setValue(value);
+            super.setValueInternal(value);
         } else {
             throw illegalValue(value, Image.class);
         }
@@ -66,7 +63,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsURL(URL url) {
         try {
-            super.setValue(new Image(url.toString()));
+            super.setValueInternal(new Image(url.toString()));
         } catch (Exception e) {
             throw illegalValue(url, URL.class);
         }
@@ -82,7 +79,7 @@ public class ImagePropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsInputStream(InputStream stream) {
         try {
-            super.setValue(new Image(stream));
+            super.setValueInternal(new Image(stream));
         } catch (Exception e) {
             throw illegalValue(stream, URL.class);
         }

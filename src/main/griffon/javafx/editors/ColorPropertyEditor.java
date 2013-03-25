@@ -27,13 +27,10 @@ import java.util.Map;
  * @author Andres Almiray
  */
 public class ColorPropertyEditor extends AbstractPropertyEditor {
-    public void setAsText(String text) throws IllegalArgumentException {
-        setValue(text);
-    }
-
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof List) {
             handleAsList((List) value);
@@ -42,7 +39,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         } else if (value instanceof Number) {
             handleAsNumber((Number) value);
         } else if (value instanceof Color) {
-            super.setValue(value);
+            super.setValueInternal(value);
         } else {
             throw illegalValue(value, Color.class);
         }
@@ -50,7 +47,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsString(String str) {
         try {
-            super.setValue(Color.valueOf(str));
+            super.setValueInternal(Color.valueOf(str));
         } catch(IllegalArgumentException e) {
             throw illegalValue(str, Color.class, e);
         }
@@ -77,7 +74,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
                 values.set(i, parse(String.valueOf(val)));
             }
         }
-        super.setValue(
+        super.setValueInternal(
                 new Color(
                         (Double) values.get(0),
                         (Double) values.get(1),
@@ -92,7 +89,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         double g = getMapValue(map, "green", 0d);
         double b = getMapValue(map, "blue", 0d);
         double a = getMapValue(map, "alpha", 1d);
-        super.setValue(new Color(r, g, b, a));
+        super.setValueInternal(new Color(r, g, b, a));
     }
 
     private double parse(String val) {
@@ -122,6 +119,6 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsNumber(Number value) {
         double c = parse(value);
-        super.setValue(new Color(c, c, c, 1d));
+        super.setValueInternal(new Color(c, c, c, 1d));
     }
 }

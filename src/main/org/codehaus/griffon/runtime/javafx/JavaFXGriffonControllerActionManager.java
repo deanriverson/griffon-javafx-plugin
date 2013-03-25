@@ -30,6 +30,6 @@ public class JavaFXGriffonControllerActionManager extends AbstractGriffonControl
 
     @Override
     protected GriffonControllerAction createControllerAction(GriffonController controller, String actionName) {
-        return new JavaFXGriffonControllerAction(controller, actionName);
+        return new JavaFXGriffonControllerAction(this, controller, actionName);
     }
 }

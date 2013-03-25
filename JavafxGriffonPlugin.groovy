@@ -18,9 +18,9 @@
  * @author Dean Iverson
  */
 class JavafxGriffonPlugin {
-    String version = '0.8'
-    String griffonVersion = '1.1.0 > *'
-    Map dependsOn = [groovyfx: '0.7']
+    String version = '0.9'
+    String griffonVersion = '1.3.0 > *'
+    Map dependsOn = [groovyfx: '0.8']
     List pluginIncludes = []
     String license = 'Apache Software License 2.0'
     // Toolkit compatibility. No value means compatible with all
@@ -59,7 +59,7 @@ Once installed, you can use any of the nodes provided by GroovyFX in your views.
 found [here][2] and JavaFX documentation can be found [here][3].  In addition, you will be able to use the
 @FXBindable annotation on your models.
 
-### DEfault Imports
+### Default Imports
 
 This plugin enables additional imports to be used in Groovy based artifacts. Here's the full list per type
 * Controller

@@ -17,11 +17,11 @@ package org.codehaus.griffon.runtime.javafx;
 
 import griffon.core.GriffonController;
 import griffon.core.UIThreadManager;
+import griffon.core.controller.GriffonControllerActionManager;
 import groovyx.javafx.appsupport.Action;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import org.codehaus.griffon.runtime.core.controller.AbstractGriffonControllerAction;
-import org.codehaus.groovy.runtime.InvokerHelper;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -33,15 +33,18 @@ import static org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation
  * @author Andres Almiray
  */
 public class JavaFXGriffonControllerAction extends AbstractGriffonControllerAction {
+    private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_ICON = "icon";
+
     private final Action toolkitAction;
 
-    public JavaFXGriffonControllerAction(GriffonController controller, final String actionName) {
-        super(controller, actionName);
+    public JavaFXGriffonControllerAction(final GriffonControllerActionManager actionManager, GriffonController controller, final String actionName) {
+        super(actionManager, controller, actionName);
         final JavaFXGriffonControllerAction self = this;
         toolkitAction = new Action();
         toolkitAction.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent actionEvent) {
-                InvokerHelper.invokeMethod(self.getController(), actionName, actionEvent);
+                actionManager.invokeAction(self.getController(), actionName, new Object[]{actionEvent});
             }
         });
         addPropertyChangeListener(new PropertyChangeListener() {
@@ -50,9 +53,9 @@ public class JavaFXGriffonControllerAction extends AbstractGriffonControllerActi
                     public void run() {
                         if (KEY_NAME.equals(evt.getPropertyName())) {
                             toolkitAction.setName(String.valueOf(evt.getNewValue()));
-                        } else if (KEY_SHORT_DESCRIPTION.equals(evt.getPropertyName())) {
-                            toolkitAction.setDescription(String.valueOf(evt.getNewValue()));
-                        } else if (KEY_LONG_DESCRIPTION.equals(evt.getPropertyName())) {
+                        } else if (KEY_SHORT_DESCRIPTION.equals(evt.getPropertyName()) ||
+                            KEY_LONG_DESCRIPTION.equals(evt.getPropertyName()) ||
+                            KEY_DESCRIPTION.equals(evt.getPropertyName())) {
                             toolkitAction.setDescription(String.valueOf(evt.getNewValue()));
                         } else if (KEY_ENABLED.equals(evt.getPropertyName())) {
                             toolkitAction.setEnabled(castToBoolean(evt.getNewValue()));
@@ -60,13 +63,13 @@ public class JavaFXGriffonControllerAction extends AbstractGriffonControllerActi
                             toolkitAction.setSelected(castToBoolean(evt.getNewValue()));
                         } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {
                             String accelerator = (String) evt.getNewValue();
-                            if (!isBlank(accelerator)) toolkitAction.setAccelerator(accelerator);
-                        } else if (KEY_SMALL_ICON.equals(evt.getPropertyName())) {
-                            final String smallIcon = (String) evt.getNewValue();
-                            if (!isBlank(smallIcon))  toolkitAction.setIcon(smallIcon);
-                        } else if (KEY_LARGE_ICON.equals(evt.getPropertyName())) {
-                            final String largeIcon = (String) evt.getNewValue();
-                            if (!isBlank(largeIcon)) toolkitAction.setIcon(largeIcon);
+                            if (!isBlank(accelerator))
+                                toolkitAction.setAccelerator(accelerator);
+                        } else if (KEY_SMALL_ICON.equals(evt.getPropertyName()) ||
+                            KEY_LARGE_ICON.equals(evt.getPropertyName()) ||
+                            KEY_ICON.equals(evt.getPropertyName())) {
+                            final String icon = (String) evt.getNewValue();
+                            if (!isBlank(icon)) toolkitAction.setIcon(icon);
                         }
                     }
                 });
@@ -84,5 +87,20 @@ public class JavaFXGriffonControllerAction extends AbstractGriffonControllerActi
             event = (ActionEvent) args[0];
         }
         toolkitAction.onActionProperty().get().handle(event);
+    }
+
+    @Override
+    protected void doInitialize() {
+        toolkitAction.setName(getName());
+        String description = getShortDescription();
+        if (isBlank(description)) description = getLongDescription();
+        toolkitAction.setDescription(description);
+        toolkitAction.setEnabled(isEnabled());
+        toolkitAction.setSelected(isSelected());
+        String accelerator = getAccelerator();
+        if (!isBlank(accelerator)) toolkitAction.setAccelerator(accelerator);
+        String icon = getSmallIcon();
+        if (isBlank(icon)) icon = getLargeIcon();
+        if (!isBlank(icon)) toolkitAction.setIcon(icon);
     }
 }

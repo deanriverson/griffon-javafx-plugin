@@ -26,20 +26,17 @@ import java.util.Map;
  * @author Andres Almiray
  */
 public class Rectangle2DPropertyEditor extends AbstractPropertyEditor {
-    public void setAsText(String text) throws IllegalArgumentException {
-        setValue(text);
-    }
-
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof List) {
             handleAsList((List) value);
         } else if (value instanceof Map) {
             handleAsMap((Map) value);
         } else if (value instanceof Rectangle2D) {
-            super.setValue(value);
+            super.setValueInternal(value);
         } else {
             throw illegalValue(value, Rectangle2D.class);
         }
@@ -53,7 +50,7 @@ public class Rectangle2DPropertyEditor extends AbstractPropertyEditor {
                 double y = parseValue(parts[1]);
                 double w = parseValue(parts[2]);
                 double h = parseValue(parts[3]);
-                super.setValue(new Rectangle2D(x, y, w, h));
+                super.setValueInternal(new Rectangle2D(x, y, w, h));
                 break;
             default:
                 throw illegalValue(str, Rectangle2D.class);
@@ -67,7 +64,7 @@ public class Rectangle2DPropertyEditor extends AbstractPropertyEditor {
                 double y = parseValue(list.get(1));
                 double w = parseValue(list.get(2));
                 double h = parseValue(list.get(3));
-                super.setValue(new Rectangle2D(x, y, w, h));
+                super.setValueInternal(new Rectangle2D(x, y, w, h));
                 break;
             default:
                 throw illegalValue(list, Rectangle2D.class);
@@ -79,7 +76,7 @@ public class Rectangle2DPropertyEditor extends AbstractPropertyEditor {
         double y = getMapValue(map, "y", 0);
         double w = getMapValue(map, "width", 0);
         double h = getMapValue(map, "height", 0);
-        super.setValue(new Rectangle2D(x, y, w, h));
+        super.setValueInternal(new Rectangle2D(x, y, w, h));
     }
 
     private double parseValue(Object value) {

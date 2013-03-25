@@ -26,13 +26,10 @@ import java.util.Map;
  * @author Andres Almiray
  */
 public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
-    public void setAsText(String text) throws IllegalArgumentException {
-        setValue(text);
-    }
-
-    public void setValue(Object value) {
-        if (null == value) return;
-        if (value instanceof CharSequence) {
+    protected void setValueInternal(Object value) {
+        if (null == value) {
+            super.setValueInternal(null);
+        } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof List) {
             handleAsList((List) value);
@@ -41,7 +38,7 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
         } else if (value instanceof Number) {
             handleAsNumber((Number) value);
         } else if (value instanceof Dimension2D) {
-            super.setValue(value);
+            super.setValueInternal(value);
         } else {
             throw illegalValue(value, Dimension2D.class);
         }
@@ -52,12 +49,12 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
         switch (parts.length) {
             case 1:
                 double s = parseValue(parts[0]);
-                super.setValue(new Dimension2D(s, s));
+                super.setValueInternal(new Dimension2D(s, s));
                 break;
             case 2:
                 double w = parseValue(parts[0]);
                 double h = parseValue(parts[1]);
-                super.setValue(new Dimension2D(w, h));
+                super.setValueInternal(new Dimension2D(w, h));
                 break;
             default:
                 throw illegalValue(str, Dimension2D.class);
@@ -68,12 +65,12 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
         switch (list.size()) {
             case 1:
                 double s = parseValue(list.get(0));
-                super.setValue(new Dimension2D(s, s));
+                super.setValueInternal(new Dimension2D(s, s));
                 break;
             case 2:
                 double w = parseValue(list.get(0));
                 double h = parseValue(list.get(1));
-                super.setValue(new Dimension2D(w, h));
+                super.setValueInternal(new Dimension2D(w, h));
                 break;
             default:
                 throw illegalValue(list, Dimension2D.class);
@@ -83,7 +80,7 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
     private void handleAsMap(Map map) {
         double w = getMapValue(map, "width", 0);
         double h = getMapValue(map, "height", 0);
-        super.setValue(new Dimension2D(w, h));
+        super.setValueInternal(new Dimension2D(w, h));
     }
 
     private double parseValue(Object value) {
@@ -122,6 +119,6 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
 
     private void handleAsNumber(Number value) {
         double s = parse(value);
-        super.setValue(new Dimension2D(s, s));
+        super.setValueInternal(new Dimension2D(s, s));
     }
 }
