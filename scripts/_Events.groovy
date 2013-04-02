@@ -21,14 +21,19 @@
  * @author Andres Almiray
  */
 
+import griffon.util.RunMode
+
 /**
  * Add the main class to the application's configuration.  This class will have its
  * "main" method invoked to begin execution of the program.
  */
 eventCreateConfigEnd = {
-    buildConfig.griffon.application.mainClass = 'griffon.javafx.JavaFXApplication'
+    if (System.getProperty(RunMode.KEY) == RunMode.WEBSTART.name) {
+        buildConfig.griffon.application.mainClass = 'griffon.javafx.FXApplicationStub'
+    } else {
+        buildConfig.griffon.application.mainClass = 'griffon.javafx.JavaFXApplication'
+    }
 }
-
 
 eventCleanPackage = { type ->
     ant.delete(dir: "${projectWorkDir}/installer/${type}", failonerror: false)

@@ -16,6 +16,7 @@
 
 package griffon.javafx;
 
+import griffon.application.StandaloneGriffonApplication;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.application.Application;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static griffon.util.GriffonExceptionHandler.registerExceptionHandler;
 import static griffon.util.GriffonExceptionHandler.sanitize;
 
 /**
@@ -99,5 +101,17 @@ public class FXApplicationStub extends Application {
     @Override
     public void stop() {
         griffonApp.shutdown();
+    }
+
+    public static void main(String[] args) {
+        registerExceptionHandler();
+        StandaloneGriffonApplication app = new JavaFXApplication(args);
+        try {
+            app.bootstrap();
+            app.realize();
+            app.show();
+        } catch (RuntimeException e) {
+            sanitize(e).printStackTrace();
+        }
     }
 }
