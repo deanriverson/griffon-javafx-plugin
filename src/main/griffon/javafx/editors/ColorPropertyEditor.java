@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 the original author or authors.
+ * Copyright 2010-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,36 @@
 package griffon.javafx.editors;
 
 import griffon.core.resources.editors.AbstractPropertyEditor;
+import griffon.core.resources.formatters.Formatter;
+import griffon.core.resources.formatters.ParseException;
+import griffon.javafx.formatters.ColorFormatter;
+import griffon.util.GriffonNameUtils;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 /**
  * @author Andres Almiray
  */
 public class ColorPropertyEditor extends AbstractPropertyEditor {
+    public static String format(Color color) {
+        return ColorFormatter.LONG.format(color);
+    }
+
+    @Override
+    public String getAsText() {
+        return GriffonNameUtils.isBlank(getFormat()) ? format((Color) getValueInternal()) : getFormattedValue();
+    }
+
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
         } else if (value instanceof CharSequence) {
-            handleAsString(String.valueOf(value));
+            handleAsString(String.valueOf(value).trim());
         } else if (value instanceof List) {
             handleAsList((List) value);
         } else if (value instanceof Map) {
@@ -45,10 +60,15 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
+    @Override
+    protected Formatter resolveFormatter() {
+        return !isBlank(getFormat()) ? ColorFormatter.getInstance(getFormat()) : null;
+    }
+
     private void handleAsString(String str) {
         try {
-            super.setValueInternal(Color.valueOf(str));
-        } catch(IllegalArgumentException e) {
+            super.setValueInternal(ColorFormatter.parseColor(str));
+        } catch (ParseException e) {
             throw illegalValue(str, Color.class, e);
         }
     }
@@ -75,12 +95,12 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
             }
         }
         super.setValueInternal(
-                new Color(
-                        (Double) values.get(0),
-                        (Double) values.get(1),
-                        (Double) values.get(2),
-                        (Double) values.get(3)
-                )
+            new Color(
+                (Double) values.get(0),
+                (Double) values.get(1),
+                (Double) values.get(2),
+                (Double) values.get(3)
+            )
         );
     }
 
@@ -94,7 +114,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
 
     private double parse(String val) {
         try {
-            return (Integer.parseInt(String.valueOf(val).trim(), 16) & 0xFF)/255d;
+            return (Integer.parseInt(String.valueOf(val).trim(), 16) & 0xFF) / 255d;
         } catch (NumberFormatException e) {
             throw illegalValue(val, Color.class, e);
         }

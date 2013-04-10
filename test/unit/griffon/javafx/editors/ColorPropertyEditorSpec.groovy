@@ -26,7 +26,6 @@ class ColorPropertyEditorSpec extends Specification {
         color                         | format
         Color.RED                     | 'red'
         Color.RED                     | 'RED'
-        Color.RED                     | 'F00'
         Color.RED                     | '#F00'
         Color.RED                     | '#F00F'
         Color.RED                     | '#FF0000'
@@ -72,6 +71,7 @@ class ColorPropertyEditorSpec extends Specification {
                 [1],
                 [1, 2],
                 [1, 2, 3, 4, 5],
+                'F00',
                 '#F0',
                 '#FF0000FF00',
                 ['HH', 'FF', '00'],
