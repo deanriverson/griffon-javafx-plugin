@@ -31,7 +31,6 @@ includePluginScript("javafx", "_Create")
 target(name: 'jfxSanityCheck', description: '', prehook: null, posthook: null) {
     depends(classpath)
 
-
     String javaHome = ant.project.properties['environment.JAVA_HOME']
     antjavafxFile = new File(javaHome, 'lib/ant-javafx.jar')
     if (!antjavafxFile.exists()) {
@@ -47,7 +46,6 @@ target(name: 'jfxSanityCheck', description: '', prehook: null, posthook: null) {
     taskdef(uri: 'antlib:com.sun.javafx.tools.ant',
             resource: 'com/sun/javafx/tools/ant/antlib.xml',
             classpath: "$installerResourcesDir:$antjavafxFile")
-
 }
 
 target(name: 'createPackageJfxNative', description: '', prehook: null, posthook: null) {
@@ -64,7 +62,6 @@ target(name: 'createPackageJfxNative', description: '', prehook: null, posthook:
     }
 
     ant.mkdir(dir: distDir + "/jfxnative")
-
 
     def prettyAppName = griffon.util.GriffonNameUtils.getNaturalName(griffonAppName)
 
@@ -123,7 +120,12 @@ target(name: 'createPackageJfxNative', description: '', prehook: null, posthook:
             //verbose: "true",
             outfile: "$prettyAppName") {
 
-        fxant.application(refid: griffonAppName)
+        fxant.application(
+                id: griffonAppName,
+                name: prettyAppName,
+                mainClass: 'griffon.javafx.FXApplicationStub',
+                //fallbackClass: //FIXME
+        )
 
         fxant.resources {
             fileset file: "$distDir/jfxnative/${griffonAppName}Jar.jar"
