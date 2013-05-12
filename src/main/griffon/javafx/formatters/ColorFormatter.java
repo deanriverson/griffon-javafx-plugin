@@ -31,7 +31,7 @@ import static org.codehaus.groovy.runtime.StringGroovyMethods.padLeft;
  * @author Andres Almiray
  * @since 1.3.0
  */
-public class ColorFormatter extends AbstractFormatter {
+public class ColorFormatter extends AbstractFormatter<Color> {
     public static final String PATTERN_SHORT = "#RGB";
     public static final String PATTERN_SHORT_WITH_ALPHA = "#RGBA";
     public static final String PATTERN_LONG = "#RRGGBB";
@@ -80,14 +80,7 @@ public class ColorFormatter extends AbstractFormatter {
         return delegate.format(color);
     }
 
-    public String format(Object obj) {
-        if (obj instanceof Color) {
-            return format((Color) obj);
-        }
-        throw new IllegalArgumentException("Cannot format given Object as a Color");
-    }
-
-    public Object parse(String str) throws ParseException {
+    public Color parse(String str) throws ParseException {
         return delegate.parse(str);
     }
 
