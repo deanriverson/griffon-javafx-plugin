@@ -28,11 +28,7 @@ import griffon.util.RunMode
  * "main" method invoked to begin execution of the program.
  */
 eventCreateConfigEnd = {
-    if (System.getProperty(RunMode.KEY) == RunMode.WEBSTART.name) {
-        buildConfig.griffon.application.mainClass = 'griffon.javafx.FXApplicationStub'
-    } else {
-        buildConfig.griffon.application.mainClass = 'griffon.javafx.JavaFXApplication'
-    }
+    buildConfig.griffon.application.mainClass = 'griffon.javafx.JavaFXGriffonApplication'
 }
 
 eventCleanPackage = { type ->

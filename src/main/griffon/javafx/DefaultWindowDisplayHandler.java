@@ -26,13 +26,13 @@ import javafx.stage.Window;
  * @author Andres Almiray
  */
 public class DefaultWindowDisplayHandler implements WindowDisplayHandler {
-    public void show(Window window, JavaFXApplication application) {
+    public void show(Window window, JavaFXGriffonApplication application) {
         if (window != null && window instanceof Stage) {
             ((Stage) window).show();
         }
     }
 
-    public void hide(Window window, JavaFXApplication application) {
+    public void hide(Window window, JavaFXGriffonApplication application) {
         if (window != null) {
             window.hide();
         }

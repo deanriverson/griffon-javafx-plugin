@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class WindowManager implements ShutdownHandler {
     private static final Logger LOG = LoggerFactory.getLogger(WindowManager.class);
-    private final JavaFXApplication app;
+    private final JavaFXGriffonApplication app;
     private final OnWindowHidingHelper onWindowHiding = new OnWindowHidingHelper();
     private final OnWindowShownHelper onWindowShown = new OnWindowShownHelper();
     private final OnWindowHiddenHelper onWindowHidden = new OnWindowHiddenHelper();
@@ -52,7 +52,7 @@ public final class WindowManager implements ShutdownHandler {
      *
      * @param app an application
      */
-    public WindowManager(JavaFXApplication app) {
+    public WindowManager(JavaFXGriffonApplication app) {
         this.app = app;
     }
 

@@ -17,8 +17,9 @@
 package griffon.javafx
 
 import javafx.application.Platform
-import griffon.util.GriffonExceptionHandler
 import org.codehaus.griffon.runtime.util.AbstractUIThreadHandler
+import griffon.util.GriffonExceptionHandler
+
 import java.util.concurrent.FutureTask
 
 /**
@@ -45,7 +46,7 @@ class JavaFXUIThreadHandler extends AbstractUIThreadHandler {
      * Executes a code block synchronously on the UI thread.
      */
     void executeSync(Runnable runnable) {
-        if(isUIThread()) {
+        if (isUIThread()) {
             runnable.run()
         } else {
             // Define a Runnable that executes the task on the JavaFX thread using

@@ -18,9 +18,9 @@
  * @author Dean Iverson
  */
 class JavafxGriffonPlugin {
-    String version = '0.9.0'
-    String griffonVersion = '1.3.0 > *'
-    Map dependsOn = [groovyfx: '0.9.0']
+    String version = '0.10.0'
+    String griffonVersion = '1.4.0 > *'
+    Map dependsOn = [groovyfx: '0.9.1']
     List pluginIncludes = []
     String license = 'Apache Software License 2.0'
     // Toolkit compatibility. No value means compatible with all
@@ -36,14 +36,16 @@ class JavafxGriffonPlugin {
     String source = 'https://github.com/deanriverson/griffon-javafx-plugin'
 
     List authors = [
-            [
-                    name: 'Dean Iverson',
-                    email: 'deanriverson@gmail.com'
-            ],
-            [
-                    name: 'Andres Almiray',
-                    email: 'aalmiray@yahoo.com'
-            ]
+        [
+            id: 'deanriverson',
+            name: 'Dean Iverson',
+            email: 'deanriverson@gmail.com'
+        ],
+        [
+            id: 'aalmiray',
+            name: 'Andres Almiray',
+            email: 'aalmiray@yahoo.com'
+        ]
     ]
     String title = 'Griffon JavaFX Plugin'
     String description = '''

@@ -28,11 +28,11 @@ import java.util.Map;
 
 /**
  * Implementation of a per window {@code WindowDisplayHandler} that can be configured via a DSL.
- * <p>
+ * <p/>
  * This is the default {@code WindowDisplayHandler} used by {@code javafxApplication}. It expects a configuration entry in
  * <code>griffon-app/conf/Config.groovy</code> that looks like the following one
- * <p>
- * 
+ * <p/>
+ * <p/>
  * <pre>
  * javafx {
  *     windowManager {
@@ -50,11 +50,11 @@ import java.util.Map;
  * For these settings to work you must specify a <code>name:</code> property on the Window/Frame instance. This {@code WindowDisplayHandler}
  * is smart enough to use the default show/hide behavior should any or both are not specified or if a window name does not have a matching
  * configuration. The default behavior will also be used if the Window/Frame does not have a value for its <code>name:</code> property.
- * <p>
+ * <p/>
  * There's a third option that can be set for each configured window, and that is a delegate {@code WindowDisplayHandler} that will be used
  * for that window alone. The following example shows how it can be configured
- * <p>
- * 
+ * <p/>
+ * <p/>
  * <pre>
  * javafx {
  *     windowManager {
@@ -70,8 +70,8 @@ import java.util.Map;
  * <p/>
  * Lastly, a global handler can be specified for all windows that have not been configured. If specified, this handler will override the
  * usage of the default one. It can be configured as follows
- * <p>
- * 
+ * <p/>
+ * <p/>
  * <pre>
  * javafx {
  *     windowManager {
@@ -86,7 +86,7 @@ import java.util.Map;
  * Fine grained control for default <code>show</code> and <code>hide</code> is also possible, by specifying <code>defaultShow</code> and/or
  * <code>defaultHide</code> properties at the global level. These properties take precedence over <code>defaultHandler</code> .
  * <p/>
- * 
+ * <p/>
  * <pre>
  * javafx {
  *     windowManager {
@@ -99,13 +99,13 @@ import java.util.Map;
  * </pre>
  * <p/>
  * <strong>Note:</strong> the value for <code>show</code> and <code>hide</code> can be either a Closure or a {@code RunnableWithArgs}.
- * 
+ *
  * @author Andres Almiray
  */
 public class ConfigurableWindowDisplayHandler implements WindowDisplayHandler {
     private static final WindowDisplayHandler DEFAULT_WINDOW_DISPLAY_HANDLER = new DefaultWindowDisplayHandler();
-    
-    public void show(Window window, JavaFXApplication application) {
+
+    public void show(Window window, JavaFXGriffonApplication application) {
         WindowManager windowManager = application.getWindowManager();
         String name = windowManager.findWindowName(window);
         if (!GriffonNameUtils.isBlank(name)) {
@@ -116,7 +116,7 @@ public class ConfigurableWindowDisplayHandler implements WindowDisplayHandler {
                     run(handler, window, application);
                     return;
                 } else if (options.get("handler") instanceof WindowDisplayHandler) {
-                    ((WindowDisplayHandler)options.get("handler")).show(window, application);
+                    ((WindowDisplayHandler) options.get("handler")).show(window, application);
                     return;
                 }
             }
@@ -131,8 +131,8 @@ public class ConfigurableWindowDisplayHandler implements WindowDisplayHandler {
         }
         fetchDefaultWindowDisplayHandler(application).show(window, application);
     }
-    
-    public void hide(Window window, JavaFXApplication application) {
+
+    public void hide(Window window, JavaFXGriffonApplication application) {
         WindowManager windowManager = application.getWindowManager();
         String name = windowManager.findWindowName(window);
         if (!GriffonNameUtils.isBlank(name)) {
@@ -143,7 +143,7 @@ public class ConfigurableWindowDisplayHandler implements WindowDisplayHandler {
                     run(handler, window, application);
                     return;
                 } else if (options.get("handler") instanceof WindowDisplayHandler) {
-                    ((WindowDisplayHandler)options.get("handler")).hide(window, application);
+                    ((WindowDisplayHandler) options.get("handler")).hide(window, application);
                     return;
                 }
             }
@@ -158,7 +158,7 @@ public class ConfigurableWindowDisplayHandler implements WindowDisplayHandler {
         }
         fetchDefaultWindowDisplayHandler(application).hide(window, application);
     }
-    
+
     private boolean canBeRun(Object obj) {
         return obj instanceof Closure || obj instanceof RunnableWithArgs;
     }
@@ -166,27 +166,27 @@ public class ConfigurableWindowDisplayHandler implements WindowDisplayHandler {
     @SuppressWarnings("rawtypes")
     private void run(Object obj, Window window, GriffonApplication application) {
         if (obj instanceof Closure) {
-            ((Closure)obj).call(window, application);
+            ((Closure) obj).call(window, application);
         } else {
-            ((RunnableWithArgs)obj).run(new Object[] {window, application});
+            ((RunnableWithArgs) obj).run(new Object[]{window, application});
         }
     }
 
     @SuppressWarnings("unchecked")
     private Map<String, Object> windowManagerBlock(GriffonApplication application) {
-        Map<String, Object> block = (Map<String, Object>)ConfigUtils.getConfigValue(application.getConfig(), "javafx.windowManager");
-        return block != null ? block : Collections.<String, Object> emptyMap();
+        Map<String, Object> block = (Map<String, Object>) ConfigUtils.getConfigValue(application.getConfig(), "javafx.windowManager");
+        return block != null ? block : Collections.<String, Object>emptyMap();
     }
-    
+
     @SuppressWarnings("unchecked")
     private Map<String, Object> windowBlock(GriffonApplication application, String windowName) {
         Map<String, Object> options = windowManagerBlock(application);
-        Map<String, Object> block = (Map<String, Object>)options.get(windowName);
-        return block != null ? block : Collections.<String, Object> emptyMap();
+        Map<String, Object> block = (Map<String, Object>) options.get(windowName);
+        return block != null ? block : Collections.<String, Object>emptyMap();
     }
-    
+
     private WindowDisplayHandler fetchDefaultWindowDisplayHandler(GriffonApplication application) {
         Object handler = windowManagerBlock(application).get("defaultHandler");
-        return handler instanceof WindowDisplayHandler ? (WindowDisplayHandler)handler : DEFAULT_WINDOW_DISPLAY_HANDLER;
+        return handler instanceof WindowDisplayHandler ? (WindowDisplayHandler) handler : DEFAULT_WINDOW_DISPLAY_HANDLER;
     }
 }

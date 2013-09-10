@@ -30,7 +30,7 @@ public interface WindowDisplayHandler {
      * @param window      the window to be displayed
      * @param application the current application
      */
-    void show(Window window, JavaFXApplication application);
+    void show(Window window, JavaFXGriffonApplication application);
 
     /**
      * Callback for hiding a window.
@@ -38,5 +38,5 @@ public interface WindowDisplayHandler {
      * @param window      the window to hide
      * @param application the current application
      */
-    void hide(Window window, JavaFXApplication application);
+    void hide(Window window, JavaFXGriffonApplication application);
 }
