@@ -18,7 +18,7 @@
  * @author Dean Iverson
  */
 class JavafxGriffonPlugin {
-    String version = '0.10.0'
+    String version = '0.10.1'
     String griffonVersion = '1.4.0 > *'
     Map dependsOn = [groovyfx: '0.9.1']
     List pluginIncludes = []

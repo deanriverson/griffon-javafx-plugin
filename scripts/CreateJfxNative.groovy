@@ -65,23 +65,24 @@ target(name: 'createPackageJfxNative', description: '', prehook: null, posthook:
 
     def prettyAppName = griffon.util.GriffonNameUtils.getNaturalName(griffonAppName)
 
+    def appJarName = buildConfig.griffon.jars.jarName - '.jar'
+
     fxant.application(
-            id: griffonAppName,
+            id: appJarName,
             name: prettyAppName,
             mainClass: 'griffon.javafx.JavaFXApplication',
             //fallbackClass: //FIXME
     )
-
     def tempJarDir = "${projectWorkDir}/jars/${griffonAppName}"
     mkdir dir: tempJarDir
-    unjar src: "$installerWorkDir/binary/lib/${griffonAppName}.jar", dest: tempJarDir
+    unjar src: "$installerWorkDir/binary/lib/${appJarName}.jar", dest: tempJarDir
 
-    fxant.jar(destFile: "$distDir/jfxnative/${griffonAppName}Jar.jar") {
+    fxant.jar(destFile: "$distDir/jfxnative/${appJarName}Jar.jar") {
 
-        fxant.application(refid: griffonAppName)
+        fxant.application(refid: appJarName)
 
         fxant.resources {
-            fileset dir: "$installerWorkDir/binary/lib", includes: '*.jar', excludes: "${griffonAppName}.jar"
+            fileset dir: "$installerWorkDir/binary/lib", includes: '*.jar', excludes: appJarName
         }
 
 
@@ -106,10 +107,10 @@ target(name: 'createPackageJfxNative', description: '', prehook: null, posthook:
             }
         }
         fxant.signjar(signJarParams) {
-            fileset file: "$distDir/jfxnative/${griffonAppName}Jar.jar"
+            fileset file: "$distDir/jfxnative/${appJarName}Jar.jar"
         }
         fxant.signjar(signJarParams) {
-            fileset dir: "$installerWorkDir/binary/lib", excludes: "${griffonAppName}.jar"
+            fileset dir: "$installerWorkDir/binary/lib", excludes: appJarName
         }
     }
 
@@ -121,15 +122,15 @@ target(name: 'createPackageJfxNative', description: '', prehook: null, posthook:
             outfile: "$prettyAppName") {
 
         fxant.application(
-                id: griffonAppName,
+                id: appJarName,
                 name: prettyAppName,
-                mainClass: 'griffon.javafx.FXApplicationStub',
+                mainClass: 'griffon.javafx.JavaFXGriffonApplication',
                 //fallbackClass: //FIXME
         )
 
         fxant.resources {
-            fileset file: "$distDir/jfxnative/${griffonAppName}Jar.jar"
-            fileset dir: "$installerWorkDir/binary/lib", excludes: "${griffonAppName}.jar"
+            fileset file: "$distDir/jfxnative/${appJarName}Jar.jar"
+            fileset dir: "$installerWorkDir/binary/lib", excludes: appJarName
         }
 
         fxant.info(title: prettyAppName) {
@@ -138,7 +139,6 @@ target(name: 'createPackageJfxNative', description: '', prehook: null, posthook:
                     width: buildConfig.deploy.application.icon.default.width ?: '64',
                     height: buildConfig.deploy.application.icon.default.heignt ?: '64')
             splash(href: buildConfig.deploy.application.icon.splash.name ?: 'griffon.png')
-
         }
 
         //fxant.permissions elevate: 'true'
