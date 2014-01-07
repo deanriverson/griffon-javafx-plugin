@@ -1,4 +1,3 @@
-
 Griffon JavaFX Plugin
 ---------------------
 
@@ -97,11 +96,3 @@ similar if you create your application with the [JavaFX archetype][4]):
 [2]: http://groovy.codehaus.org/GroovyFX
 [3]: http://docs.oracle.com/javafx/2.0/api/index.html
 [4]: http://artifacts.griffon-framework.org/archetype/javafx/description
-
-Griffon JavaFX Plugin
-=====================
-
-This plugin allows you to create JavaFX 2.0 applications with the Griffon
-framework.
-
-*This plugin is highly experimental*
